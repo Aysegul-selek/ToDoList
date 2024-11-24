@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TodoApi.Core.Entities;
 
 
 [ApiController]
