@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TodoApi.Core.Entities;
 
 
-    public interface ITodoRepository
+    public interface ITodoService
     {
-        Task<List<Todo>> GetAllTodosAsync();
+        Task<List<Todo>> GetTodosAsync();
         Task<Todo> GetTodoByIdAsync(int id);
         Task AddTodoAsync(Todo todo);
         Task UpdateTodoAsync(Todo todo);
