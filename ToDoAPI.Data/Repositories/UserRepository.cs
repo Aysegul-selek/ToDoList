@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ToDoAPI.Data.IRepositories;
 using ToDoAPI.Entities.Auth;
-using ToDoAPI.Entities.Categories;
+using ToDoAPI.Entities;
 
 namespace ToDoAPI.Data.Repositories
 {

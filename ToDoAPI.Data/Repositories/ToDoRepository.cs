@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-using ToDoAPI.Entities.ToDo;
+using ToDoAPI.Entities.Entities;
 
 namespace TodoApp.Data.Repositories
 {

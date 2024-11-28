@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ToDoAPI.Entities.Auth;
-using ToDoAPI.Entities.Categories;
 
-namespace ToDoAPI.Entities.ToDo
+namespace ToDoAPI.Entities.Entities
 {
     public class Todo
     {

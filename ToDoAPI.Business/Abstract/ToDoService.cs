@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ToDoAPI.Entities.DTOs;
-using ToDoAPI.Entities.ToDo;
+using ToDoAPI.Entities.Entities;
 
 namespace ToDoAPI.Business.Abstract
 {

@@ -6,8 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using ToDoAPI.Business.Concrete;
 using ToDoAPI.Data.IRepositories;
-using ToDoAPI.Entities.Categories;
 using ToDoAPI.Entities.DTOs;
+using ToDoAPI.Entities.Entities;
 
 namespace ToDoAPI.Business.Abstract
 {

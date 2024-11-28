@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ToDoAPI.Data.IRepositories;
-using ToDoAPI.Entities.Categories;
+using ToDoAPI.Entities.Entities;
 
 namespace ToDoAPI.Data.Repositories
 {

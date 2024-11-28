@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ToDoAPI.Entities.Auth;
-using ToDoAPI.Entities.Categories;
-using ToDoAPI.Entities.ToDo;
+using ToDoAPI.Entities.Entities;
 
 
 public class TodoDbContext : DbContext

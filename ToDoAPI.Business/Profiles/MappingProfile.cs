@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ToDoAPI.Entities.Auth;
-using ToDoAPI.Entities.Categories;
 using ToDoAPI.Entities.DTOs;
-using ToDoAPI.Entities.ToDo;
+using ToDoAPI.Entities.Entities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ToDoAPI.Business.Mapping
