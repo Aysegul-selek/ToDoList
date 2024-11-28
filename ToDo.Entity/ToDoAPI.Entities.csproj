@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ToDo.Entity\ToDoAPI.Entities.csproj" />
-  </ItemGroup>
-
 </Project>

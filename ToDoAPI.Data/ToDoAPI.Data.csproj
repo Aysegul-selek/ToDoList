@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ToDo.Entity\ToDoAPI.Entities.csproj" />
     <ProjectReference Include="..\ToDoAPI.Core\ToDoAPI.Core.csproj" />
   </ItemGroup>
 

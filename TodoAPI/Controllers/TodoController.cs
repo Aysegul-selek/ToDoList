@@ -1,29 +1,79 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ToDoAPI.Entities.DTOs;
 
 
-[ApiController]
 [Route("api/[controller]")]
+[ApiController]
 public class TodoController : ControllerBase
 {
-    private readonly ITodoService _service;
+    private readonly ITodoService _todoService;
 
-    public TodoController(ITodoService service)
+    public TodoController(ITodoService todoService)
     {
-        _service = service;
+        _todoService = todoService;
     }
 
+    // GET: api/Todo
     [HttpGet]
-    public Task<List<Todo>> GetTodos() => _service.GetTodosAsync();
+    public async Task<IActionResult> GetTodos()
+    {
+        var todos = await _todoService.GetAllTodosAsync();
+        return Ok(todos); // Verileri OK (200) ile döndürüyoruz
+    }
 
+    // GET: api/Todo/5
     [HttpGet("{id}")]
-    public Task<Todo> GetTodoById(int id) => _service.GetTodoByIdAsync(id);
+    public async Task<IActionResult> GetTodoById(int id)
+    {
+        var todo = await _todoService.GetTodoByIdAsync(id);
+        if (todo == null)
+        {
+            return NotFound(); // Eğer todo bulunamazsa 404 döndür
+        }
+        return Ok(todo); // Bulunursa 200 ile döndür
+    }
 
+    // POST: api/Todo
     [HttpPost]
-    public Task AddTodo(Todo todo) => _service.AddTodoAsync(todo);
+    public async Task<IActionResult> CreateTodo([FromBody] TodoDto todoDto)
+    {
+        if (todoDto == null)
+        {
+            return BadRequest("Todo verisi geçersiz.");
+        }
 
-    [HttpPut]
-    public Task UpdateTodo(Todo todo) => _service.UpdateTodoAsync(todo);
+        var createdTodo = await _todoService.CreateTodoAsync(todoDto);
+        return CreatedAtAction(nameof(GetTodoById), new { id = createdTodo.Id }, createdTodo); 
+    }
 
+    // PUT: api/Todo/5
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateTodo(int id, [FromBody] TodoDto todoDto)
+    {
+        if (id != todoDto.Id)
+        {
+            return BadRequest("Todo ID'leri eşleşmiyor.");
+        }
+
+        var updatedTodo = await _todoService.UpdateTodoAsync(todoDto);
+        if (updatedTodo == null)
+        {
+            return NotFound(); 
+        }
+
+        return NoContent(); 
+    }
+
+    // DELETE: api/Todo/5
     [HttpDelete("{id}")]
-    public Task DeleteTodoAsync(int id) => _service.DeleteTodoAsync(id);
+    public async Task<IActionResult> DeleteTodo(int id)
+    {
+        var deleted = await _todoService.DeleteTodoAsync(id);
+        if (!deleted)
+        {
+            return NotFound(); 
+        }
+
+        return NoContent(); 
+    }
 }

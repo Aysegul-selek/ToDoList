@@ -1,6 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TodoApp.Data;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System;
+using ToDoAPI.Entities.ToDo;
 
-namespace TodoApi.Data.Repositories
+namespace TodoApp.Data.Repositories
 {
     public class TodoRepository : ITodoRepository
     {
@@ -13,34 +19,38 @@ namespace TodoApi.Data.Repositories
 
         public async Task<List<Todo>> GetAllTodosAsync()
         {
-            return await _context.Todos.ToListAsync();
+            return await _context.Todos.Include(t => t.User).Include(t => t.Category).ToListAsync();
         }
 
-        public async Task<Todo> GetTodoByIdAsync(int id)
+        public async Task<Todo> GetTodoByIdAsync(int todoId)
         {
-            return await _context.Todos.FindAsync(id);
+            return await _context.Todos.Include(t => t.User).Include(t => t.Category).FirstOrDefaultAsync(t => t.TodoId == todoId);
         }
 
-        public async Task AddTodoAsync(Todo todo)
+        public async Task<Todo> CreateTodoAsync(Todo todo)
         {
-            await _context.Todos.AddAsync(todo);
+            _context.Todos.Add(todo);
             await _context.SaveChangesAsync();
+            return todo;
         }
 
-        public async Task UpdateTodoAsync(Todo todo)
+        public async Task<Todo> UpdateTodoAsync(Todo todo)
         {
             _context.Todos.Update(todo);
             await _context.SaveChangesAsync();
+            return todo;
         }
 
-        public async Task DeleteTodoAsync(int id)
+        public async Task<bool> DeleteTodoAsync(int todoId)
         {
-            var todo = await _context.Todos.FindAsync(id);
+            var todo = await _context.Todos.FirstOrDefaultAsync(t => t.TodoId == todoId);
             if (todo != null)
             {
                 _context.Todos.Remove(todo);
                 await _context.SaveChangesAsync();
+                return true;
             }
+            return false;
         }
     }
 }

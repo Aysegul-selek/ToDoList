@@ -1,27 +1,54 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ToDoAPI.Entities.DTOs;
+using ToDoAPI.Entities.ToDo;
 
 namespace ToDoAPI.Business.Abstract
 {
-    public class ToDoService : ITodoService
+    public class TodoService : ITodoService
     {
-        private readonly ITodoRepository _repository;
+        private readonly ITodoRepository _todoRepository;
+        private readonly IMapper _mapper;
 
-        public ToDoService(ITodoRepository repository)
+        public TodoService(IMapper mapper, ITodoRepository todoRepository)
         {
-            _repository = repository;
+            _mapper = mapper;
+            _todoRepository = todoRepository;
         }
-        public Task<List<Todo>> GetTodosAsync() => _repository.GetAllTodosAsync();
 
-        public Task<Todo> GetTodoByIdAsync(int id) => _repository.GetTodoByIdAsync(id);
+        public async Task<TodoDto> CreateTodoAsync(TodoDto todoDto)
+        {
+            var todo = _mapper.Map<Todo>(todoDto);
+            var createdTodo = await _todoRepository.CreateTodoAsync(todo);
+            return _mapper.Map<TodoDto>(createdTodo);
+        }
 
-        public Task AddTodoAsync(Todo todo) => _repository.AddTodoAsync(todo);
+        public async Task<bool> DeleteTodoAsync(int todoId)
+        {
+            return await _todoRepository.DeleteTodoAsync(todoId);
+        }
 
-        public Task UpdateTodoAsync(Todo todo) => _repository.UpdateTodoAsync(todo);
+        public async Task<List<TodoDto>> GetAllTodosAsync()
+        {
+            var todos = await _todoRepository.GetAllTodosAsync();
+            return _mapper.Map<List<TodoDto>>(todos);
+        }
 
-        public Task DeleteTodoAsync(int id) => _repository.DeleteTodoAsync(id);
+        public async Task<TodoDto> GetTodoByIdAsync(int todoId)
+        {
+            var todo = await _todoRepository.GetTodoByIdAsync(todoId);
+            return _mapper.Map<TodoDto>(todo);
+        }
+
+        public async Task<TodoDto> UpdateTodoAsync(TodoDto todoDto)
+        {
+            var todo = _mapper.Map<Todo>(todoDto);
+            var updatedTodo = await _todoRepository.UpdateTodoAsync(todo);
+            return _mapper.Map<TodoDto>(updatedTodo);
+        }
     }
 }
