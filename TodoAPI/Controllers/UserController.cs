@@ -20,7 +20,7 @@ namespace TodoAPI.Controllers
         public async Task<IActionResult> GetUsers()
         {
             var users = await _userService.GetAllUsersAsync();
-            return Ok(users); // Verileri OK (200) ile döndürüyoruz
+            return Ok(users); 
         }
 
         // GET: api/User/5
@@ -30,9 +30,9 @@ namespace TodoAPI.Controllers
             var user = await _userService.GetUserByIdAsync(id);
             if (user == null)
             {
-                return NotFound(); // Eğer user bulunamazsa 404 döndür
+                return NotFound();
             }
-            return Ok(user); // Bulunursa 200 ile döndür
+            return Ok(user); 
         }
 
         // POST: api/User
@@ -45,7 +45,7 @@ namespace TodoAPI.Controllers
             }
 
             var createdUser = await _userService.CreateUserAsync(userDto);
-            return CreatedAtAction(nameof(GetUserById), new { id = createdUser.UserId }, createdUser); // 201 döner
+            return CreatedAtAction(nameof(GetUserById), new { id = createdUser.UserId }, createdUser); 
         }
 
         // PUT: api/User/5
@@ -60,10 +60,10 @@ namespace TodoAPI.Controllers
             var updatedUser = await _userService.UpdateUserAsync(userDto);
             if (updatedUser == null)
             {
-                return NotFound(); // Eğer güncellenecek user bulunamazsa 404 döner
+                return NotFound(); 
             }
 
-            return NoContent(); // Başarıyla güncellendi, 204 döner
+            return NoContent(); 
         }
 
         // DELETE: api/User/5
@@ -73,10 +73,10 @@ namespace TodoAPI.Controllers
             var deleted = await _userService.DeleteUserAsync(id);
             if (!deleted)
             {
-                return NotFound(); // Silinecek user bulunamazsa 404 döner
+                return NotFound(); 
             }
 
-            return NoContent(); // Başarıyla silindi, 204 döner
+            return NoContent(); 
         }
     }
 }
