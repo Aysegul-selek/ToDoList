@@ -45,14 +45,14 @@ namespace TodoAPI.Controllers
             }
 
             var createdCategory = await _categoryService.CreateCategoryAsync(categoryDto);
-            return CreatedAtAction(nameof(GetCategoryById), new { id = createdCategory.Id }, createdCategory); 
+            return CreatedAtAction(nameof(GetCategoryById), new { id = createdCategory.CategoryId }, createdCategory); 
         }
 
         // PUT: api/Category/5
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryDto categoryDto)
         {
-            if (id != categoryDto.Id)
+            if (id != categoryDto.CategoryId)
             {
                 return BadRequest("Category ID'leri eşleşmiyor.");
             }

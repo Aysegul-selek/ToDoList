@@ -45,14 +45,14 @@ namespace TodoAPI.Controllers
             }
 
             var createdUser = await _userService.CreateUserAsync(userDto);
-            return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser); // 201 döner
+            return CreatedAtAction(nameof(GetUserById), new { id = createdUser.UserId }, createdUser); // 201 döner
         }
 
         // PUT: api/User/5
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDto userDto)
         {
-            if (id != userDto.Id)
+            if (id != userDto.UserId)
             {
                 return BadRequest("User ID'leri eşleşmiyor.");
             }

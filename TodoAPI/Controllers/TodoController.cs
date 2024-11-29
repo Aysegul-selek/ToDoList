@@ -43,14 +43,14 @@ public class TodoController : ControllerBase
         }
 
         var createdTodo = await _todoService.CreateTodoAsync(todoDto);
-        return CreatedAtAction(nameof(GetTodoById), new { id = createdTodo.Id }, createdTodo); 
+        return CreatedAtAction(nameof(GetTodoById), new { id = createdTodo.TodoId }, createdTodo); 
     }
 
     // PUT: api/Todo/5
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTodo(int id, [FromBody] TodoDto todoDto)
     {
-        if (id != todoDto.Id)
+        if (id != todoDto.TodoId)
         {
             return BadRequest("Todo ID'leri eşleşmiyor.");
         }
