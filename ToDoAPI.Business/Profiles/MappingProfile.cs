@@ -22,7 +22,8 @@ namespace ToDoAPI.Business.Mapping
             CreateMap<User, UserDto>()
                  .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Username)).
                  ReverseMap();
-
+            CreateMap<RegisterDto, User>() // RegisterDto -> User
+            .ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
             // Category Mapping
             CreateMap<Category, CategoryDto>().ReverseMap(); ;
         }
