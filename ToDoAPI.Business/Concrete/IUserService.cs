@@ -9,10 +9,8 @@ namespace ToDoAPI.Business.Concrete
 {
     public interface IUserService
     {
-        Task<List<UserDto>> GetAllUsersAsync();
-        Task<UserDto> GetUserByIdAsync(int userId);
-        Task<UserDto> CreateUserAsync(UserDto userDto);
-        Task<UserDto> UpdateUserAsync(UserDto userDto);
-        Task<bool> DeleteUserAsync(int userId);
+        Task<UserDto> GetUserByIdAsync(int id);
+        Task<bool> RegisterAsync(RegisterDto registerDto);
+        Task<string> LoginAsync(LoginDto loginDto);
     }
 }

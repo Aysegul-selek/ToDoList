@@ -10,7 +10,7 @@ using ToDoAPI.Entities;
 
 namespace ToDoAPI.Data.Repositories
 {
-    // UserRepository
+    
     public class UserRepository : IUserRepository
     {
         private readonly TodoDbContext _context;
@@ -20,42 +20,25 @@ namespace ToDoAPI.Data.Repositories
             _context = context;
         }
 
-        public async Task<List<User>> GetAllUsersAsync()
+        public async Task<User> GetByIdAsync(int id)
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.FindAsync(id);
         }
 
-        public async Task<User> GetUserByIdAsync(int userId)
+        public async Task<User> GetByUsernameAsync(string username)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
         }
 
-        public async Task<User> CreateUserAsync(User user)
+        public async Task AddAsync(User user)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return user;
+            await _context.Users.AddAsync(user);
         }
 
-        public async Task<User> UpdateUserAsync(User user)
+        public async Task<bool> SaveChangesAsync()
         {
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
-            return user;
-        }
-
-        public async Task<bool> DeleteUserAsync(int userId)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
-            if (user != null)
-            {
-                _context.Users.Remove(user);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            return false;
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 
-   
 }

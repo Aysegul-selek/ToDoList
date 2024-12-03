@@ -1,10 +1,15 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using ToDoAPI.Business.Concrete;
+using ToDoAPI.Core;
 using ToDoAPI.Data.IRepositories;
 using ToDoAPI.Entities.Auth;
 using ToDoAPI.Entities.DTOs;
@@ -16,42 +21,63 @@ namespace ToDoAPI.Business.Abstract
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-
-        public UserService(IMapper mapper, IUserRepository userRepository)
+        private readonly IConfiguration _configuration;
+        public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration)
         {
-            _mapper = mapper;
             _userRepository = userRepository;
+            _mapper = mapper;
+            _configuration = configuration;
         }
 
-        public async Task<UserDto> CreateUserAsync(UserDto userDto)
-        {
-            var user = _mapper.Map<User>(userDto);
-            var createdUser = await _userRepository.CreateUserAsync(user);
-            return _mapper.Map<UserDto>(createdUser);
-        }
 
-        public async Task<bool> DeleteUserAsync(int userId)
-        {
-            return await _userRepository.DeleteUserAsync(userId);
-        }
 
-        public async Task<List<UserDto>> GetAllUsersAsync()
+        public async  Task<UserDto> GetUserByIdAsync(int id)
         {
-            var users = await _userRepository.GetAllUsersAsync();
-            return _mapper.Map<List<UserDto>>(users);
-        }
-
-        public async Task<UserDto> GetUserByIdAsync(int userId)
-        {
-            var user = await _userRepository.GetUserByIdAsync(userId);
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user == null) throw new Exception("User not found");
             return _mapper.Map<UserDto>(user);
+           
         }
 
-        public async Task<UserDto> UpdateUserAsync(UserDto userDto)
+        public async Task<string> LoginAsync(LoginDto loginDto)
         {
-            var user = _mapper.Map<User>(userDto);
-            var updatedUser = await _userRepository.UpdateUserAsync(user);
-            return _mapper.Map<UserDto>(updatedUser);
+            var user = await _userRepository.GetByUsernameAsync(loginDto.Username);
+            if (user == null) throw new Exception("User not found.");
+
+            // Şifre kontrolü
+            var hashedPassword = PasswordHelper.HashPassword(loginDto.Password);
+            if (user.PasswordHash != hashedPassword) throw new Exception("Invalid password.");
+
+            // Kullanıcı doğrulandı, token oluşturma
+            var claims = new[]
+            {
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        }; 
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt:ExpiresInMinutes"]));
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: expires,
+                signingCredentials: creds
+            );
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async  Task<bool> RegisterAsync(RegisterDto registerDto)
+        {
+            var existingUser = await _userRepository.GetByUsernameAsync(registerDto.Username);
+            if (existingUser != null) throw new Exception("User already exists.");
+            // Kullanıcı oluşturma
+            var user = _mapper.Map<User>(registerDto);
+            user.PasswordHash = PasswordHelper.HashPassword(registerDto.Password);
+
+            await _userRepository.AddAsync(user);
+            return await _userRepository.SaveChangesAsync();
         }
     }
 }
