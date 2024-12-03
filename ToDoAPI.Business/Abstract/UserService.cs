@@ -28,9 +28,6 @@ namespace ToDoAPI.Business.Abstract
             _mapper = mapper;
             _configuration = configuration;
         }
-
-
-
         public async  Task<UserDto> GetUserByIdAsync(int id)
         {
             var user = await _userRepository.GetByIdAsync(id);
