@@ -57,8 +57,8 @@ namespace TodoApp.Data.Repositories
         public async Task<List<Todo>> GetAllWithCategoryAndUserAsync()
         {
             return await _context.Todos
-                .Include(t => t.Category) // Kategoriyi dahil ediyoruz
-                .Include(t => t.User)     // Kullanıcıyı dahil ediyoruz
+                   .Include(t => t.User)
+                .Include(t => t.Category) // Kategoriyi dahil ediyor
                 .ToListAsync();           // Asenkron olarak listeyi döndürüyoruz
         }
     }

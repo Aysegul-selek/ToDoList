@@ -17,9 +17,8 @@ namespace ToDoAPI.Business.Mapping
         {
              CreateMap<Todo, TodoDto>()
             .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
-            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Username));
-            // Todo Mapping
-            CreateMap<Todo, TodoDto>().ReverseMap();
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Username)).ReverseMap(); ;
+         
 
             // User Mapping
             CreateMap<User, UserDto>()
