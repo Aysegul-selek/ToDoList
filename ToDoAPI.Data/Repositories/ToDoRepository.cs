@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 using ToDoAPI.Entities.Entities;
+using ToDoAPI.Data.IRepositories;
 
 namespace TodoApp.Data.Repositories
 {
@@ -51,6 +52,14 @@ namespace TodoApp.Data.Repositories
                 return true;
             }
             return false;
+        }
+
+        public async Task<List<Todo>> GetAllWithCategoryAndUserAsync()
+        {
+            return await _context.Todos
+                .Include(t => t.Category) // Kategoriyi dahil ediyoruz
+                .Include(t => t.User)     // Kullanıcıyı dahil ediyoruz
+                .ToListAsync();           // Asenkron olarak listeyi döndürüyoruz
         }
     }
 }

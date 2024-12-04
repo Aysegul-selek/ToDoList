@@ -18,7 +18,7 @@ public class TodoController : ControllerBase
     public async Task<IActionResult> GetTodos()
     {
         var todos = await _todoService.GetAllTodosAsync();
-        return Ok(todos); // Verileri OK (200) ile döndürüyoruz
+        return Ok(todos); 
     }
 
     // GET: api/Todo/5
@@ -28,9 +28,9 @@ public class TodoController : ControllerBase
         var todo = await _todoService.GetTodoByIdAsync(id);
         if (todo == null)
         {
-            return NotFound(); // Eğer todo bulunamazsa 404 döndür
+            return NotFound();
         }
-        return Ok(todo); // Bulunursa 200 ile döndür
+        return Ok(todo); 
     }
 
     // POST: api/Todo

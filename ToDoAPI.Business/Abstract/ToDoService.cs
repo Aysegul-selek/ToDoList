@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ToDoAPI.Data.IRepositories;
 using ToDoAPI.Entities.DTOs;
 using ToDoAPI.Entities.Entities;
 
@@ -34,7 +35,7 @@ namespace ToDoAPI.Business.Abstract
 
         public async Task<List<TodoDto>> GetAllTodosAsync()
         {
-            var todos = await _todoRepository.GetAllTodosAsync();
+            var todos = await _todoRepository.GetAllWithCategoryAndUserAsync();
             return _mapper.Map<List<TodoDto>>(todos);
         }
 
