@@ -10,7 +10,7 @@ namespace ToDoAPI.Data.IRepositories
     public interface ITodoRepository
     {
         Task<List<Todo>> GetAllTodosAsync();
-        Task<List<Todo>> GetAllWithCategoryAndUserAsync();
+        Task<List<Todo>> GetAllWithStatusAndUserAsync();
         Task<Todo> GetTodoByIdAsync(int todoId);
         Task<Todo> CreateTodoAsync(Todo todo);
         Task<Todo> UpdateTodoAsync(Todo todo);

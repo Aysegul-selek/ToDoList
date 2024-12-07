@@ -20,12 +20,12 @@ namespace TodoApp.Data.Repositories
 
         public async Task<List<Todo>> GetAllTodosAsync()
         {
-            return await _context.Todos.Include(t => t.User).Include(t => t.Category).ToListAsync();
+            return await _context.Todos.Include(t => t.User).Include(t => t.Status).ToListAsync();
         }
 
         public async Task<Todo> GetTodoByIdAsync(int todoId)
         {
-            return await _context.Todos.Include(t => t.User).Include(t => t.Category).FirstOrDefaultAsync(t => t.TodoId == todoId);
+            return await _context.Todos.Include(t => t.User).Include(t => t.Status).FirstOrDefaultAsync(t => t.TodoId == todoId);
         }
 
         public async Task<Todo> CreateTodoAsync(Todo todo)
@@ -54,12 +54,12 @@ namespace TodoApp.Data.Repositories
             return false;
         }
 
-        public async Task<List<Todo>> GetAllWithCategoryAndUserAsync()
+        public async Task<List<Todo>> GetAllWithStatusAndUserAsync()
         {
             return await _context.Todos
                    .Include(t => t.User)
-                .Include(t => t.Category) // Kategoriyi dahil ediyor
-                .ToListAsync();           // Asenkron olarak listeyi döndürüyoruz
+                .Include(t => t.Status) 
+                .ToListAsync();          
         }
     }
 }

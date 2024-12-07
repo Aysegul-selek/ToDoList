@@ -9,7 +9,7 @@ public class TodoDbContext : DbContext
 
     public DbSet<Todo> Todos { get; set; }
     public DbSet<User> Users { get; set; }
-    public DbSet<Category> Categories { get; set; }
+    public DbSet<Status> Statuses { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -21,11 +21,11 @@ public class TodoDbContext : DbContext
             .HasForeignKey(t => t.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Todo ve Category ilişkisi
+        // Todo ve Status ilişkisi
         modelBuilder.Entity<Todo>()
-            .HasOne(t => t.Category)
+            .HasOne(t => t.Status)
             .WithMany(c => c.Todos)
-            .HasForeignKey(t => t.CategoryId)
+            .HasForeignKey(t => t.StatusId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

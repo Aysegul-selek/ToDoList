@@ -5,14 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ToDoAPI.Entities.Entities
+namespace ToDoAPI.Entities.DTOs
 {
-    public class Category
+    public class StatusDto
     {
         [Key]
-        public int CategoryId { get; set; }
+        public int StatusId { get; set; } // Veritabanındaki StatusId ile uyumlu
         public string Name { get; set; }
-        public ICollection<Todo> Todos { get; set; }
     }
 
 }

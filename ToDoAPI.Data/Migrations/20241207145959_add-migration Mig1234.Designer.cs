@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ToDoAPI.Data.Migrations
 {
     [DbContext(typeof(TodoDbContext))]
-    [Migration("20241129124541_Mig2")]
-    partial class Mig2
+    [Migration("20241207145959_add-migration Mig1234")]
+    partial class addmigrationMig1234
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,21 +49,21 @@ namespace ToDoAPI.Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ToDoAPI.Entities.Entities.Category", b =>
+            modelBuilder.Entity("ToDoAPI.Entities.Entities.Status", b =>
                 {
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("StatusId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StatusId"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CategoryId");
+                    b.HasKey("StatusId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Statuses");
                 });
 
             modelBuilder.Entity("ToDoAPI.Entities.Entities.Todo", b =>
@@ -74,8 +74,8 @@ namespace ToDoAPI.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TodoId"));
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -87,6 +87,9 @@ namespace ToDoAPI.Data.Migrations
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("bit");
 
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -96,7 +99,7 @@ namespace ToDoAPI.Data.Migrations
 
                     b.HasKey("TodoId");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("StatusId");
 
                     b.HasIndex("UserId");
 
@@ -105,9 +108,9 @@ namespace ToDoAPI.Data.Migrations
 
             modelBuilder.Entity("ToDoAPI.Entities.Entities.Todo", b =>
                 {
-                    b.HasOne("ToDoAPI.Entities.Entities.Category", "Category")
+                    b.HasOne("ToDoAPI.Entities.Entities.Status", "Status")
                         .WithMany("Todos")
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -117,7 +120,7 @@ namespace ToDoAPI.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("Status");
 
                     b.Navigation("User");
                 });
@@ -127,7 +130,7 @@ namespace ToDoAPI.Data.Migrations
                     b.Navigation("Todos");
                 });
 
-            modelBuilder.Entity("ToDoAPI.Entities.Entities.Category", b =>
+            modelBuilder.Entity("ToDoAPI.Entities.Entities.Status", b =>
                 {
                     b.Navigation("Todos");
                 });

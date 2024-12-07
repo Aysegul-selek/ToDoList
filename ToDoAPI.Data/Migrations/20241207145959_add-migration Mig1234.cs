@@ -6,22 +6,22 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ToDoAPI.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Mig : Migration
+    public partial class addmigrationMig1234 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "Statuses",
                 columns: table => new
                 {
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    StatusId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.CategoryId);
+                    table.PrimaryKey("PK_Statuses", x => x.StatusId);
                 });
 
             migrationBuilder.CreateTable(
@@ -47,19 +47,20 @@ namespace ToDoAPI.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: false),
                     IsCompleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Todos", x => x.TodoId);
                     table.ForeignKey(
-                        name: "FK_Todos_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "CategoryId",
+                        name: "FK_Todos_Statuses_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Statuses",
+                        principalColumn: "StatusId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Todos_Users_UserId",
@@ -70,9 +71,9 @@ namespace ToDoAPI.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Todos_CategoryId",
+                name: "IX_Todos_StatusId",
                 table: "Todos",
-                column: "CategoryId");
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Todos_UserId",
@@ -87,7 +88,7 @@ namespace ToDoAPI.Data.Migrations
                 name: "Todos");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Statuses");
 
             migrationBuilder.DropTable(
                 name: "Users");

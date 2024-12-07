@@ -15,8 +15,8 @@ namespace ToDoAPI.Entities.DTOs
         public string Description { get; set; }
         public bool IsCompleted { get; set; }
         public int UserId { get; set; }
-        public int CategoryId { get; set; }
-        public string CategoryName { get; set; } // Kategori ismi
+        public int StatusId { get; set; }
+        public string StatusName { get; set; } // Kategori ismi
         public string UserName { get; set; } // Kullanıcı ismi
     }
 }
