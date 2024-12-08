@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ToDoAPI.Entities.DTOs;
+using ToDoAPI.Entities.DTOs.ToDo;
 
 
 [Route("api/[controller]")]
@@ -35,33 +35,24 @@ public class TodoController : ControllerBase
 
     // POST: api/Todo
     [HttpPost]
-    public async Task<IActionResult> CreateTodo([FromBody] TodoDto todoDto)
+    public async Task<ActionResult<TodoDto>> CreateTodo([FromBody] TodoCreateDTO todoCreateDto)
     {
-        if (todoDto == null)
-        {
-            return BadRequest("Todo verisi geçersiz.");
-        }
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-        var createdTodo = await _todoService.CreateTodoAsync(todoDto);
-        return CreatedAtAction(nameof(GetTodoById), new { id = createdTodo.TodoId }, createdTodo); 
+        var createdTodo = await _todoService.CreateTodoAsync(todoCreateDto);
+        return CreatedAtAction(nameof(GetTodoById), new { id = createdTodo.TodoId }, createdTodo);
     }
-
-    // PUT: api/Todo/5
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateTodo(int id, [FromBody] TodoDto todoDto)
+    public async Task<ActionResult<TodoDto>> UpdateTodo(int id, [FromBody] TodoCreateDTO todoCreateDto)
     {
-        if (id != todoDto.TodoId)
-        {
-            return BadRequest("Todo ID'leri eşleşmiyor.");
-        }
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-        var updatedTodo = await _todoService.UpdateTodoAsync(todoDto);
+        var updatedTodo = await _todoService.UpdateTodoAsync(id, todoCreateDto);
         if (updatedTodo == null)
-        {
-            return NotFound(); 
-        }
-
-        return NoContent(); 
+            return NotFound("Todo not found.");
+        return Ok(updatedTodo);
     }
 
     // DELETE: api/Todo/5

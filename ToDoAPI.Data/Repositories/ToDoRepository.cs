@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System;
 using ToDoAPI.Entities.Entities;
 using ToDoAPI.Data.IRepositories;
+using ToDoAPI.Entities.DTOs;
+using ToDoAPI.Entities.DTOs.ToDo;
 
 namespace TodoApp.Data.Repositories
 {
@@ -20,7 +22,7 @@ namespace TodoApp.Data.Repositories
 
         public async Task<List<Todo>> GetAllTodosAsync()
         {
-            return await _context.Todos.Include(t => t.User).Include(t => t.Status).ToListAsync();
+            return await _context.Todos.Include(t => t.User).ToListAsync();
         }
 
         public async Task<Todo> GetTodoByIdAsync(int todoId)
@@ -54,12 +56,19 @@ namespace TodoApp.Data.Repositories
             return false;
         }
 
-        public async Task<List<Todo>> GetAllWithStatusAndUserAsync()
+        public async Task<List<TodoDto>> GetAllWithStatusAndUserAsync()
         {
             return await _context.Todos
-                   .Include(t => t.User)
-                .Include(t => t.Status) 
-                .ToListAsync();          
+                .Include(t => t.User)  // Kullanıcıyı dahil et
+                .Select(t => new TodoDto
+                {
+                    TodoId = t.TodoId,
+                    Title = t.Title,
+                    Description = t.Description,
+                    Status = t.Status.ToString(),  // Enum'u string'e dönüştür
+                    UserName = t.User.Username  // User ile ilişkili Username al
+                })
+                .ToListAsync();
         }
     }
 }

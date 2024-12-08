@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ToDoAPI.Entities.DTOs;
+using ToDoAPI.Entities.DTOs.ToDo;
 using ToDoAPI.Entities.Entities;
 
 
-    public interface ITodoService
+public interface ITodoService
     {
     Task<List<TodoDto>> GetAllTodosAsync();
     Task<TodoDto> GetTodoByIdAsync(int todoId);
-    Task<TodoDto> CreateTodoAsync(TodoDto todoDto);
-    Task<TodoDto> UpdateTodoAsync(TodoDto todoDto);
+    Task<TodoDto> CreateTodoAsync(TodoCreateDTO todoDto);
+    Task<TodoDto> UpdateTodoAsync(int todoId, TodoCreateDTO todoCreateDto);
     Task<bool> DeleteTodoAsync(int todoId);
 }
 
