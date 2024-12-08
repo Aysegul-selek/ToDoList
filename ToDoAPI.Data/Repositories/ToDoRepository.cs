@@ -27,7 +27,7 @@ namespace TodoApp.Data.Repositories
 
         public async Task<Todo> GetTodoByIdAsync(int todoId)
         {
-            return await _context.Todos.Include(t => t.User).Include(t => t.Status).FirstOrDefaultAsync(t => t.TodoId == todoId);
+            return await _context.Todos.Include(t => t.User).FirstOrDefaultAsync(t => t.TodoId == todoId);
         }
 
         public async Task<Todo> CreateTodoAsync(Todo todo)
