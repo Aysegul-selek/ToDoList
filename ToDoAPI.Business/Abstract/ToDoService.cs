@@ -52,7 +52,7 @@ namespace ToDoAPI.Business.Abstract
             if (todo == null)
                 throw new Exception("Todo not found.");
 
-            _mapper.Map(todoCreateDto, todo); // Mevcut entity'yi güncelle
+            _mapper.Map(todoCreateDto, todo);
             var updatedTodo = await _todoRepository.UpdateTodoAsync(todo);
             return _mapper.Map<TodoDto>(updatedTodo);
         }
