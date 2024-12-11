@@ -15,7 +15,7 @@ public class TodoDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Todo>()
        .Property(t => t.Status)
-       .HasConversion<string>(); // Enum'u string olarak sakla
+       .HasConversion<string>(); 
 
     }
 }

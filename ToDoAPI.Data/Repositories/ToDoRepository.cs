@@ -59,14 +59,14 @@ namespace TodoApp.Data.Repositories
         public async Task<List<TodoDto>> GetAllWithStatusAndUserAsync()
         {
             return await _context.Todos
-                .Include(t => t.User)  // Kullanıcıyı dahil et
+                .Include(t => t.User) 
                 .Select(t => new TodoDto
                 {
                     TodoId = t.TodoId,
                     Title = t.Title,
                     Description = t.Description,
-                    Status = t.Status.ToString(),  // Enum'u string'e dönüştür
-                    UserName = t.User.Username  // User ile ilişkili Username al
+                    Status = t.Status.ToString(),
+                    UserName = t.User.Username  
                 })
                 .ToListAsync();
         }
