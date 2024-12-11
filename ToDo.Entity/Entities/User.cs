@@ -15,8 +15,6 @@ namespace ToDoAPI.Entities.Auth
         public string Username { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
-
-        // İlişkiler
         public ICollection<Todo> Todos { get; set; }
     }
 
