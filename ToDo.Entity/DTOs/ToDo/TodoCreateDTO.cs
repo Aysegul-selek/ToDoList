@@ -13,6 +13,6 @@ namespace ToDoAPI.Entities.DTOs.ToDo
         public string Description { get; set; }
         public int UserId { get; set; }
         public string UserName { get; set; }
-        public StatusEnum Status { get; set; } // Kullanıcıdan gelen enum değeri
+        public StatusEnum Status { get; set; }
     }
 }

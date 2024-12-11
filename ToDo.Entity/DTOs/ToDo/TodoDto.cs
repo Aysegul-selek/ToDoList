@@ -19,6 +19,6 @@ namespace ToDoAPI.Entities.DTOs.ToDo
         public string Description { get; set; }
         public bool IsCompleted { get; set; }
         public string Status { get; set; }
-        public string UserName { get; set; } // Kullanıcı ismi
+        public string UserName { get; set; } 
     }
 }
