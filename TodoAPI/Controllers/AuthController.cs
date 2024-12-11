@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ToDoAPI.Business.Abstract;
 using ToDoAPI.Business.Concrete;
-using ToDoAPI.Entities.DTOs;
+using ToDoAPI.Entities.DTOs.Auth;
 
 namespace TodoAPI.Controllers
 {

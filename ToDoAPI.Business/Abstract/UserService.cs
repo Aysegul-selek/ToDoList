@@ -13,10 +13,11 @@ using ToDoAPI.Core;
 using ToDoAPI.Data.IRepositories;
 using ToDoAPI.Entities.Auth;
 using ToDoAPI.Entities.DTOs;
+using ToDoAPI.Entities.DTOs.Auth;
 
 namespace ToDoAPI.Business.Abstract
 {
-   
+
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;

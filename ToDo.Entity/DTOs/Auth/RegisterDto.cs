@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ToDoAPI.Entities.DTOs
+namespace ToDoAPI.Entities.DTOs.Auth
 {
     public class RegisterDto
     {
@@ -12,6 +12,6 @@ namespace ToDoAPI.Entities.DTOs
         public string Email { get; set; }
         [Required]
         [MinLength(6)]
-        public string Password { get; set; } 
+        public string Password { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ToDoAPI.Entities.Auth;
 using ToDoAPI.Entities.DTOs;
+using ToDoAPI.Entities.DTOs.Auth;
 using ToDoAPI.Entities.DTOs.ToDo;
 using ToDoAPI.Entities.Entities;
 using static System.Runtime.InteropServices.JavaScript.JSType;

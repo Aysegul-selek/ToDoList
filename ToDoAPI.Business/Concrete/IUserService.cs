@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ToDoAPI.Entities.DTOs;
+using ToDoAPI.Entities.DTOs.Auth;
 
 namespace ToDoAPI.Business.Concrete
 {
