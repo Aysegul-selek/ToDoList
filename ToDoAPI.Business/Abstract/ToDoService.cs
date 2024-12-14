@@ -36,7 +36,7 @@ namespace ToDoAPI.Business.Abstract
 
         public async Task<List<TodoDto>> GetAllTodosAsync()
         {
-            var todos = await _todoRepository.GetAllWithStatusAndUserAsync();
+            var todos = await _todoRepository.GetAllTodosAsync();
             return _mapper.Map<List<TodoDto>>(todos);
         }
 

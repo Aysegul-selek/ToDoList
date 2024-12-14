@@ -22,8 +22,18 @@ namespace TodoApp.Data.Repositories
 
         public async Task<List<Todo>> GetAllTodosAsync()
         {
-            return await _context.Todos.Include(t => t.User).ToListAsync();
+            try
+            {
+                return await _context.Todos.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception here
+                throw new Exception("An error occurred while fetching the todos.", ex);
+            }
         }
+
+
 
         public async Task<Todo> GetTodoByIdAsync(int todoId)
         {
