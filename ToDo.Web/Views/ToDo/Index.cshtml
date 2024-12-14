@@ -1,0 +1,29 @@
+﻿@model List<ToDoAPI.Entities.DTOs.ToDo.TodoDto>
+
+<h1>ToDo List</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>User</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var todo in Model)
+        {
+            <tr>
+                <td>@todo.Title</td>
+                <td>@todo.Description</td>
+                <td>@todo.Status</td>
+                <td>@todo.UserName</td>
+                <td>
+                    <a href="/Todo/Details/@todo.TodoId">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a href="/Todo/Create">Create New</a>

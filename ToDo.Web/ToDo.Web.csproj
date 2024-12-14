@@ -12,4 +12,14 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\ToDo\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ToDo.Entity\ToDoAPI.Entities.csproj" />
+    <ProjectReference Include="..\ToDoAPI.Business\ToDoAPI.Business.csproj" />
+    <ProjectReference Include="..\ToDoAPI.Data\ToDoAPI.Data.csproj" />
+  </ItemGroup>
+
 </Project>
