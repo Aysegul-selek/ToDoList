@@ -14,14 +14,11 @@ builder.Services.AddControllersWithViews();
 // AutoMapper registration
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-// DbContext registration
-builder.Services.AddDbContext<TodoDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Dependency Injection registration
-builder.Services.AddScoped<ITodoService, TodoService>();
-builder.Services.AddScoped<ITodoRepository, TodoRepository>();
-
+builder.Services.AddHttpClient<ITodoService, TodoService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:44305/api");
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline

@@ -14,7 +14,7 @@ namespace ToDo.Web.Controllers
         {
             _httpClient = new HttpClient
             {
-                BaseAddress = new System.Uri("https://localhost:7279/api/")
+                BaseAddress = new System.Uri("https://localhost:44305/api/")
             };
             _todoService = todoService;
         }
