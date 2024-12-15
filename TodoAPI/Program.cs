@@ -30,12 +30,12 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(options =>
+builder.Services.AddCors(opt =>
 {
-    options.AddPolicy("AllowAllOrigins",
-        builder => builder.AllowAnyOrigin()
-                          .AllowAnyMethod()
-                          .AllowAnyHeader());
+    opt.AddPolicy("ToDoApiCors", opts =>
+    {
+        opts.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
+    });
 });
 builder.Services.AddAuthentication(options =>
 {
@@ -69,7 +69,7 @@ app.UseAuthentication();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+app.UseCors("ToDoApiCors");
 app.MapControllers();
 
 app.Run();
