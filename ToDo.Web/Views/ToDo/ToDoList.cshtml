@@ -1,0 +1,340 @@
+﻿@model List<ToDoAPI.Entities.DTOs.ToDo.TodoDto>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo List</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="~/ToDo.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+
+
+        .page-title-box .page-title {
+            font-size: 18px;
+            line-height: 75px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .page-title {
+            margin-left: 100px;
+        }
+
+        .board {
+            display: block;
+            white-space: nowrap;
+            overflow-x: auto;
+        }
+
+        a {
+            text-decoration: none !important;
+        }
+
+        .tasks:not(:last-child) {
+            margin-right: 1.25rem;
+        }
+
+
+
+        .tasks {
+            display: inline-block;
+            width: 20rem;
+            padding: 0 1rem 1rem 1rem;
+            border: 1px solid #eef2f7;
+            vertical-align: top;
+            margin-bottom: 1.5rem;
+            border-radius: 0.25rem;
+        }
+
+            .tasks .task-header {
+                background-color: #f6f7fb;
+                padding: 1rem;
+                margin: 0 -1rem;
+                font-size: 15px;
+                font-weight: 500;
+            }
+
+        .task-list-items {
+            min-height: 100px;
+            position: relative;
+        }
+
+            .task-list-items:before {
+                content: "No Tasks";
+                position: absolute;
+                line-height: 110px;
+                width: 100%;
+                text-align: center;
+                font-weight: 600;
+                color: rgb(165, 165, 165);
+            }
+
+        .tasks .card {
+            white-space: normal;
+            margin-top: 1rem;
+            border: 1px solid #eee;
+            border-left-width: 0.25rem;
+            white-space: normal;
+            margin-top: 1rem;
+        }
+
+        .card {
+            -webkit-box-shadow: 0px 0px 35px 0px rgba(154, 161, 171, 0.15);
+            box-shadow: 0px 0px 35px 0px rgba(154, 161, 171, 0.15);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-body {
+            -webkit-box-flex: 1;
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            padding: 1.5rem 1.5rem;
+            color: white !important;
+        }
+
+        .card-title {
+            margin-bottom: 10px !important;
+            font-weight: 500;
+            font-size: 16px !important;
+            cursor: pointer;
+        }
+
+        .title {
+            text-decoration: line-through;
+        }
+
+        .text-body {
+            opacity: 1;
+            color: rgba(108,117,125), 1 !important;
+        }
+
+
+
+
+        .dropdown-toggle {
+            display: none !important;
+            ;
+        }
+
+
+        .avatar-xs {
+            height: 1.6rem;
+            width: 1.6rem;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-center">
+                        <div class="board">
+                            <!-- TODO Column -->
+                            <div class="tasks">
+                                <h5 class="mt-0 task-header" id="todo-header">TODO (0)</h5>
+                                <div id="task-list-one" class="task-list-items">
+                                    @foreach (var todo in Model.Where(t => t.Status == "ToDo"))
+                                    {
+                                        <div class="card mb-0" id="card@todo.TodoId" style="border-left-color: lightgreen;">
+                                            <div class="card-body p-3">
+                                                <h5 class="mt-2 card-title text-secondary">@todo.Title</h5>
+                                                <p class="mb-0 text-secondary">
+                                                    <span class="pe-2 text-nowrap mb-2 d-inline-block">
+                                                        <i class="mdi mdi-briefcase-outline text-muted"></i> @todo.UserName
+                                                    </span>
+                                                    <span class="text-nowrap mb-2 d-inline-block">
+                                                        <i class="mdi mdi-comment-multiple-outline text-muted"></i> <b>@todo.Description</b>
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- IN PROGRESS Column -->
+                            <div class="tasks">
+                                <h5 class="mt-0 task-header" id="progress-header">Planning (0)</h5>
+                                <div id="task-list-two" class="task-list-items">
+                                    @foreach (var todo in Model.Where(t => t.Status == "Planning"))
+                                    {
+                                        <div class="card mb-0" id="card@todo.TodoId" style="border-left-color: skyblue;">
+                                            <div class="card-body p-3">
+                                                <h5 class="mt-2 card-title text-secondary">@todo.Title</h5>
+                                                <p class="mb-0 text-secondary">
+                                                    <span class="pe-2 text-nowrap mb-2 d-inline-block">
+                                                        <i class="mdi mdi-briefcase-outline text-muted"></i> @todo.UserName
+                                                    </span>
+                                                    <span class="text-nowrap mb-2 d-inline-block">
+                                                        <i class="mdi mdi-comment-multiple-outline text-muted"></i> <b>@todo.Description</b>
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- REVIEW Column -->
+                            <div class="tasks">
+                                <h5 class="mt-0 task-header" id="review-header">InProgress (0)</h5>
+                                <div id="task-list-three" class="task-list-items">
+                                    @foreach (var todo in Model.Where(t => t.Status == "InProgress"))
+                                    {
+                                        <div class="card mb-0" id="card@todo.TodoId" style="border-left-color: violet;">
+                                            <div class="card-body p-3">
+                                                <h5 class="mt-2 card-title text-secondary">@todo.Title</h5>
+                                                <p class="mb-0 text-secondary">
+                                                    <span class="pe-2 text-nowrap mb-2 d-inline-block">
+                                                        <i class="mdi mdi-briefcase-outline text-muted"></i> @todo.UserName
+                                                    </span>
+                                                    <span class="text-nowrap mb-2 d-inline-block">
+                                                        <i class="mdi mdi-comment-multiple-outline text-muted"></i> <b>@todo.Description</b>
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- DONE Column -->
+                            <div class="tasks">
+                                <h5 class="mt-0 task-header" id="done-header">Done</h5>
+                                <div id="task-list-four" class="task-list-items">
+                                    @foreach (var todo in Model.Where(t => t.Status == "Done"))
+                                    {
+                                        <div class="card mb-0" id="card@todo.TodoId" style="border-left-color: green;">
+                                            <div class="card-body p-3">
+                                                <h5 class="mt-2 card-title text-secondary" style="text-decoration: line-through;">@todo.Title</h5>
+                                                <p class="mb-0 text-secondary">
+                                                    <span class="pe-2 text-nowrap mb-2 d-inline-block">
+                                                        <i class="mdi mdi-briefcase-outline text-muted"></i> @todo.UserName
+                                                    </span>
+                                                    <span class="text-nowrap mb-2 d-inline-block">
+                                                        <i class="mdi mdi-comment-multiple-outline text-muted"></i> <b>@todo.Description</b>
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+    </footer>
+
+    <script>
+          <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let draggingCard = null;
+            const taskLists = document.querySelectorAll(".task-list-items");
+            document.querySelectorAll('.card').forEach(card => {
+                card.setAttribute('draggable', true);
+
+                card.addEventListener('dragstart', function (event) {
+                    draggingCard = event.target;
+                    setTimeout(() => {
+                        event.target.style.visibility = 'hidden'; 
+                    }, 0);
+                });
+
+                card.addEventListener('dragend', function (event) {
+                    setTimeout(() => {
+                        draggingCard.style.visibility = 'visible'; 
+                        draggingCard = null;
+                    }, 0);
+                });
+            });
+
+            taskLists.forEach(taskList => {
+                taskList.addEventListener("dragover", function (event) {
+                    event.preventDefault(); 
+                    const cardBeingDragged = document.querySelector('.dragging');
+                    const closestCard = getClosestCard(event.clientY, taskList);
+                    if (closestCard) {
+                        taskList.insertBefore(cardBeingDragged, closestCard); 
+                    } else {
+                        taskList.appendChild(cardBeingDragged); 
+                    }
+                });
+
+                taskList.addEventListener("drop", function (event) {
+                    event.preventDefault();
+                    const card = draggingCard;
+                    const column = event.target.closest(".task-list-items");
+                    const newStatus = getNewStatus(column);
+
+                    if (card) {
+                        column.appendChild(card); 
+
+                    
+                        updateTaskStatus(card.id, newStatus);
+                    }
+                });
+            });
+
+           
+            function getClosestCard(y, taskList) {
+                const cards = [...taskList.querySelectorAll('.card')];
+                return cards.reduce((closest, card) => {
+                    const box = card.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 2;
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset, element: card };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            }
+
+            
+            function getNewStatus(column) {
+                if (column.id === "task-list-one") {
+                    return "ToDo";
+                } else if (column.id === "task-list-two") {
+                    return "Planning";
+                } else if (column.id === "task-list-three") {
+                    return "InProgress";
+                } else if (column.id === "task-list-four") {
+                    return "Done";
+                }
+                return "";
+            }
+
+          
+            function updateTaskStatus(taskId, newStatus) {
+                $.ajax({
+                    url: '/Todo/UpdateStatus',  
+                    type: 'POST',
+                    data: {
+                        taskId: taskId,
+                        status: newStatus
+                    },
+                    success: function (response) {
+                        console.log('Görev durumu başarıyla güncellendi');
+                    },
+                    error: function (error) {
+                        console.log('Görev durumu güncellenirken hata oluştu:', error);
+                    }
+                });
+            }
+        });
+    </script>
+
+    </script>
+
+</body>
+</html>
