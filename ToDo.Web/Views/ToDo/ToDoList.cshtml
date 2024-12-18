@@ -8,6 +8,7 @@
     <title>ToDo List</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="~/ToDo.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
 
@@ -237,23 +238,25 @@
     </footer>
 
     <script>
-          <script>
-        document.addEventListener("DOMContentLoaded", function () {
+               document.addEventListener("DOMContentLoaded", function () {
             let draggingCard = null;
             const taskLists = document.querySelectorAll(".task-list-items");
+
             document.querySelectorAll('.card').forEach(card => {
                 card.setAttribute('draggable', true);
 
                 card.addEventListener('dragstart', function (event) {
                     draggingCard = event.target;
+                    draggingCard.classList.add('dragging');
                     setTimeout(() => {
-                        event.target.style.visibility = 'hidden'; 
+                        event.target.style.visibility = 'hidden';
                     }, 0);
                 });
 
                 card.addEventListener('dragend', function (event) {
                     setTimeout(() => {
-                        draggingCard.style.visibility = 'visible'; 
+                        draggingCard.style.visibility = 'visible';
+                        draggingCard.classList.remove('dragging');
                         draggingCard = null;
                     }, 0);
                 });
@@ -261,13 +264,14 @@
 
             taskLists.forEach(taskList => {
                 taskList.addEventListener("dragover", function (event) {
-                    event.preventDefault(); 
+                    event.preventDefault();
                     const cardBeingDragged = document.querySelector('.dragging');
                     const closestCard = getClosestCard(event.clientY, taskList);
+
                     if (closestCard) {
-                        taskList.insertBefore(cardBeingDragged, closestCard); 
+                        taskList.insertBefore(cardBeingDragged, closestCard);
                     } else {
-                        taskList.appendChild(cardBeingDragged); 
+                        taskList.appendChild(cardBeingDragged);
                     }
                 });
 
@@ -278,15 +282,12 @@
                     const newStatus = getNewStatus(column);
 
                     if (card) {
-                        column.appendChild(card); 
-
-                    
+                        column.appendChild(card);
                         updateTaskStatus(card.id, newStatus);
                     }
                 });
             });
 
-           
             function getClosestCard(y, taskList) {
                 const cards = [...taskList.querySelectorAll('.card')];
                 return cards.reduce((closest, card) => {
@@ -300,24 +301,17 @@
                 }, { offset: Number.NEGATIVE_INFINITY }).element;
             }
 
-            
             function getNewStatus(column) {
-                if (column.id === "task-list-one") {
-                    return "ToDo";
-                } else if (column.id === "task-list-two") {
-                    return "Planning";
-                } else if (column.id === "task-list-three") {
-                    return "InProgress";
-                } else if (column.id === "task-list-four") {
-                    return "Done";
-                }
+                if (column.id === "task-list-one") return "ToDo";
+                if (column.id === "task-list-two") return "Planning";
+                if (column.id === "task-list-three") return "InProgress";
+                if (column.id === "task-list-four") return "Done";
                 return "";
             }
 
-          
             function updateTaskStatus(taskId, newStatus) {
                 $.ajax({
-                    url: '/Todo/UpdateStatus',  
+                    url: '/Todo/UpdateStatus',
                     type: 'POST',
                     data: {
                         taskId: taskId,
@@ -332,7 +326,7 @@
                 });
             }
         });
-    </script>
+
 
     </script>
 

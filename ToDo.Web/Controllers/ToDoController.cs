@@ -17,7 +17,7 @@ namespace ToDo.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-           
+
             return View();
         }
         [HttpGet]
@@ -72,32 +72,32 @@ namespace ToDo.Web.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateStatus(int taskId, StatusEnum status)
+        public async Task<IActionResult> UpdateStatus(int taskId, string newStatus)
         {
-            // API'ye PUT veya PATCH isteği göndererek güncelleme işlemini yapıyoruz
-            var client = _httpClientFactory.CreateClient();
-
-            // Güncellenmiş status bilgisini içeren veri modelini oluşturuyoruz
-            var model = new { TaskId = taskId, Status = status.ToString() };
-
-            // JSON'a dönüştürüyoruz
-            var jsonData = JsonConvert.SerializeObject(model);
-            StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-
-            // API'ye PUT isteği gönderiyoruz
-            var responseMessage = await client.PutAsync($"https://localhost:44305/api/Todo/{taskId}/status", stringContent);
-
-            // API yanıtını kontrol ediyoruz
-            if (responseMessage.IsSuccessStatusCode)
+            if (taskId <= 0 || string.IsNullOrWhiteSpace(newStatus))
             {
-                // Başarılı ise yönlendirme yapıyoruz
-                return RedirectToAction("ToDoList");
+                return BadRequest("Geçersiz veri.");
             }
 
-            // Başarısız olursa hata sayfasına yönlendiriyoruz
-            return BadRequest("Status güncellenemedi");
+            var client = _httpClientFactory.CreateClient();
+
+            // JSON içeriğini hazırla
+            var updateRequest = new { Status = newStatus };
+            var jsonData = JsonConvert.SerializeObject(updateRequest);
+            var stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+            // PUT isteğini gönder
+            var responseMessage = await client.PutAsync($"https://localhost:44305/api/Todo/{taskId}", stringContent);
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("ToDoList");
+            }
+            else
+            {
+                var errorContent = await responseMessage.Content.ReadAsStringAsync();
+                return BadRequest($"Status güncellenemedi: {errorContent}");
+            }
         }
-
-
     }
-}
+    }
