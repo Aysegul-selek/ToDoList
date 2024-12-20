@@ -8,6 +8,7 @@ using ToDoAPI.Entities.Entities;
 using ToDoAPI.Data.IRepositories;
 using ToDoAPI.Entities.DTOs;
 using ToDoAPI.Entities.DTOs.ToDo;
+using ToDoAPI.Entities.Enums;
 
 namespace TodoApp.Data.Repositories
 {
@@ -79,6 +80,25 @@ namespace TodoApp.Data.Repositories
                     UserName = t.User.Username  
                 })
                 .ToListAsync();
+        }
+
+        public async Task UpdateStatusAsync(int todoId, string status)
+        {
+            var todo = await _context.Todos.FirstOrDefaultAsync(t => t.TodoId == todoId);
+            if (todo != null)
+            {
+                // String değeri StatusEnum'a dönüştürme
+                if (Enum.TryParse<StatusEnum>(status, out var parsedStatus))
+                {
+                    todo.Status = parsedStatus;  // Status'u güncelle
+                    _context.Todos.Update(todo);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new ArgumentException("Geçersiz durum değeri.");  // Geçersiz string durum için hata mesajı
+                }
+            }
         }
     }
 }

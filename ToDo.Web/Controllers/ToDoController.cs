@@ -72,32 +72,29 @@ namespace ToDo.Web.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateStatus(int taskId, string newStatus)
+        public async Task<IActionResult> UpdateStatus(string taskId, string status)
         {
-            if (taskId <= 0 || string.IsNullOrWhiteSpace(newStatus))
-            {
-                return BadRequest("Geçersiz veri.");
-            }
-
             var client = _httpClientFactory.CreateClient();
 
-            // JSON içeriğini hazırla
-            var updateRequest = new { Status = newStatus };
-            var jsonData = JsonConvert.SerializeObject(updateRequest);
-            var stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+            var model = new { TaskId = taskId, Status = status };
+            var jsonData = JsonConvert.SerializeObject(model);
+            StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-            // PUT isteğini gönder
-            var responseMessage = await client.PutAsync($"https://localhost:44305/api/Todo/{taskId}", stringContent);
+            var responseMessage = await client.PostAsync("https://localhost:44305/api/Todo/{taskId}/status?status={status}", stringContent);
 
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("ToDoList");
+                return Ok(); // Send a success response back to the client
             }
-            else
-            {
-                var errorContent = await responseMessage.Content.ReadAsStringAsync();
-                return BadRequest($"Status güncellenemedi: {errorContent}");
-            }
+
+            return StatusCode(500, "Internal Server Error"); // In case of failure
         }
+
+
     }
-    }
+}
+public class UpdateStatusDTO
+{
+    public int Id { get; set; }
+    public string Status { get; set; }
+}

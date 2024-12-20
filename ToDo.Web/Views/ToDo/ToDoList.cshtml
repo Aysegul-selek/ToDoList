@@ -238,7 +238,7 @@
     </footer>
 
     <script>
-               document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function () {
             let draggingCard = null;
             const taskLists = document.querySelectorAll(".task-list-items");
 
@@ -249,13 +249,13 @@
                     draggingCard = event.target;
                     draggingCard.classList.add('dragging');
                     setTimeout(() => {
-                        event.target.style.visibility = 'hidden';
+                        event.target.style.display = 'none'; // Use display instead of visibility for smoother behavior
                     }, 0);
                 });
 
                 card.addEventListener('dragend', function (event) {
                     setTimeout(() => {
-                        draggingCard.style.visibility = 'visible';
+                        draggingCard.style.display = 'block'; // Restore display to block after drag ends
                         draggingCard.classList.remove('dragging');
                         draggingCard = null;
                     }, 0);
@@ -302,6 +302,7 @@
             }
 
             function getNewStatus(column) {
+                // Ensure the column ids are correctly mapped to statuses
                 if (column.id === "task-list-one") return "ToDo";
                 if (column.id === "task-list-two") return "Planning";
                 if (column.id === "task-list-three") return "InProgress";
@@ -310,24 +311,25 @@
             }
 
             function updateTaskStatus(taskId, newStatus) {
-                $.ajax({
-                    url: '/Todo/UpdateStatus',
-                    type: 'POST',
-                    data: {
-                        taskId: taskId,
-                        status: newStatus
-                    },
-                    success: function (response) {
-                        console.log('Görev durumu başarıyla güncellendi');
-                    },
-                    error: function (error) {
-                        console.log('Görev durumu güncellenirken hata oluştu:', error);
-                    }
-                });
+                 $.ajax({
+             url: 'https://localhost:44305/api/Todo/{taskId}/status?status={status}',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                taskId: taskId,
+                status: newStatus
+            }),
+            success: function (response) {
+                console.log('Görev durumu başarıyla güncellendi');
+            },
+            error: function (error) {
+                console.log('Görev durumu güncellenirken hata oluştu:', error);
             }
         });
+        ;
+            }
 
-
+        });
     </script>
 
 </body>

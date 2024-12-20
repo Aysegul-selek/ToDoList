@@ -15,6 +15,7 @@ namespace ToDoAPI.Data.IRepositories
         Task<Todo> GetTodoByIdAsync(int todoId);
         Task<Todo> CreateTodoAsync(Todo todo);
         Task<Todo> UpdateTodoAsync(Todo todo);
+        Task UpdateStatusAsync(int todoId, string status);
         Task<bool> DeleteTodoAsync(int todoId);
     }
 }

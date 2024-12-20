@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ToDoAPI.Business.Abstract;
 using ToDoAPI.Entities.DTOs.ToDo;
 
 
@@ -54,7 +55,19 @@ public class TodoController : ControllerBase
             return NotFound("Todo not found.");
         return Ok(updatedTodo);
     }
-
+    [HttpPut("{todoId}/status")]
+    public async Task<IActionResult> UpdateStatus(int todoId, string status)
+    {
+       
+            var result = await _todoService.UpdateStatusAsync(todoId, status);
+            if (result)
+            {
+                return Ok(new { message = "Status updated successfully!" });
+            }
+            return BadRequest(new { message = "Invalid status or Todo not found!" });
+        
+      
+    }
     // DELETE: api/Todo/5
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTodo(int id)

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using ToDoAPI.Data.IRepositories;
 using ToDoAPI.Entities.DTOs.ToDo;
 using ToDoAPI.Entities.Entities;
+using ToDoAPI.Entities.Enums;
+using TodoApp.Data.Repositories;
 
 namespace ToDoAPI.Business.Abstract
 {
@@ -47,6 +49,21 @@ namespace ToDoAPI.Business.Abstract
             return _mapper.Map<TodoDto>(todo);
         }
 
+        public async Task<bool> UpdateStatusAsync(int todoId, string status)
+        {
+            // StatusEnum'a dönüştürme işlemi
+            if (Enum.TryParse<StatusEnum>(status, out var parsedStatus))
+            {
+                var todo = await _todoRepository.GetTodoByIdAsync(todoId);
+                if (todo != null)
+                {
+                    todo.Status = parsedStatus;
+                    await _todoRepository.UpdateTodoAsync(todo);
+                    return true;
+                }
+            }
+            return false; // Status geçersiz veya Todo bulunamadı
+        }
         public async Task<TodoDto> UpdateTodoAsync(int todoId, TodoCreateDTO todoCreateDto)
         {
             var todo = await _todoRepository.GetTodoByIdAsync(todoId);
