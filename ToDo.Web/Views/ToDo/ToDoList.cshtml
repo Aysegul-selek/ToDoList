@@ -11,8 +11,7 @@
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-
-
+        /* Stil düzenlemeleri */
         .page-title-box .page-title {
             font-size: 18px;
             line-height: 75px;
@@ -38,8 +37,6 @@
         .tasks:not(:last-child) {
             margin-right: 1.25rem;
         }
-
-
 
         .tasks {
             display: inline-block;
@@ -113,20 +110,14 @@
             color: rgba(108,117,125), 1 !important;
         }
 
-
-
-
         .dropdown-toggle {
             display: none !important;
-            ;
         }
-
 
         .avatar-xs {
             height: 1.6rem;
             width: 1.6rem;
         }
-
     </style>
 </head>
 <body>
@@ -137,12 +128,12 @@
                     <div class="col-12 d-flex justify-content-center">
                         <div class="board">
                             <!-- TODO Column -->
-                            <div class="tasks">
+                            <div class="tasks" data-status="ToDo">
                                 <h5 class="mt-0 task-header" id="todo-header">TODO (0)</h5>
                                 <div id="task-list-one" class="task-list-items">
-                                    @foreach (var todo in Model.Where(t => t.Status == "ToDo"))
+                                    @foreach (var todo in Model.Where(t => t.Status == ToDoAPI.Entities.Enums.StatusEnum.ToDo.ToString()))
                                     {
-                                        <div class="card mb-0" id="card@todo.TodoId" style="border-left-color: lightgreen;">
+                                        <div class="card mb-0" id="card@todo.TodoId" style="border-left-color: lightgreen;" data-todo-id="@todo.TodoId" data-status="ToDo">
                                             <div class="card-body p-3">
                                                 <h5 class="mt-2 card-title text-secondary">@todo.Title</h5>
                                                 <p class="mb-0 text-secondary">
@@ -160,12 +151,12 @@
                             </div>
 
                             <!-- IN PROGRESS Column -->
-                            <div class="tasks">
+                            <div class="tasks" data-status="Planning">
                                 <h5 class="mt-0 task-header" id="progress-header">Planning (0)</h5>
                                 <div id="task-list-two" class="task-list-items">
-                                    @foreach (var todo in Model.Where(t => t.Status == "Planning"))
+                                    @foreach (var todo in Model.Where(t => t.Status == ToDoAPI.Entities.Enums.StatusEnum.Planning.ToString()))
                                     {
-                                        <div class="card mb-0" id="card@todo.TodoId" style="border-left-color: skyblue;">
+                                        <div class="card mb-0" id="card@todo.TodoId" style="border-left-color: skyblue;" data-todo-id="@todo.TodoId" data-status="Planning">
                                             <div class="card-body p-3">
                                                 <h5 class="mt-2 card-title text-secondary">@todo.Title</h5>
                                                 <p class="mb-0 text-secondary">
@@ -182,13 +173,13 @@
                                 </div>
                             </div>
 
-                            <!-- REVIEW Column -->
-                            <div class="tasks">
-                                <h5 class="mt-0 task-header" id="review-header">InProgress (0)</h5>
+                            <!-- IN PROGRESS Column -->
+                            <div class="tasks" data-status="InProgress">
+                                <h5 class="mt-0 task-header" id="inprogress-header">InProgress (0)</h5>
                                 <div id="task-list-three" class="task-list-items">
-                                    @foreach (var todo in Model.Where(t => t.Status == "InProgress"))
+                                    @foreach (var todo in Model.Where(t => t.Status == ToDoAPI.Entities.Enums.StatusEnum.InProgress.ToString()))
                                     {
-                                        <div class="card mb-0" id="card@todo.TodoId" style="border-left-color: violet;">
+                                        <div class="card mb-0" id="card@todo.TodoId" style="border-left-color: violet;" data-todo-id="@todo.TodoId" data-status="InProgress">
                                             <div class="card-body p-3">
                                                 <h5 class="mt-2 card-title text-secondary">@todo.Title</h5>
                                                 <p class="mb-0 text-secondary">
@@ -206,12 +197,12 @@
                             </div>
 
                             <!-- DONE Column -->
-                            <div class="tasks">
+                            <div class="tasks" data-status="Done">
                                 <h5 class="mt-0 task-header" id="done-header">Done</h5>
                                 <div id="task-list-four" class="task-list-items">
-                                    @foreach (var todo in Model.Where(t => t.Status == "Done"))
+                                    @foreach (var todo in Model.Where(t => t.Status == ToDoAPI.Entities.Enums.StatusEnum.Done.ToString()))
                                     {
-                                        <div class="card mb-0" id="card@todo.TodoId" style="border-left-color: green;">
+                                        <div class="card mb-0" id="card@todo.TodoId" style="border-left-color: green;" data-todo-id="@todo.TodoId" data-status="Done">
                                             <div class="card-body p-3">
                                                 <h5 class="mt-2 card-title text-secondary" style="text-decoration: line-through;">@todo.Title</h5>
                                                 <p class="mb-0 text-secondary">
@@ -236,101 +227,56 @@
 
     <footer class="footer">
     </footer>
-
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             let draggingCard = null;
+
+            // Kolonlar
             const taskLists = document.querySelectorAll(".task-list-items");
 
+            // Her bir card elementini sürüklenebilir yapmak
             document.querySelectorAll('.card').forEach(card => {
                 card.setAttribute('draggable', true);
 
-                card.addEventListener('dragstart', function (event) {
-                    draggingCard = event.target;
-                    draggingCard.classList.add('dragging');
-                    setTimeout(() => {
-                        event.target.style.display = 'none'; // Use display instead of visibility for smoother behavior
-                    }, 0);
-                });
-
-                card.addEventListener('dragend', function (event) {
-                    setTimeout(() => {
-                        draggingCard.style.display = 'block'; // Restore display to block after drag ends
-                        draggingCard.classList.remove('dragging');
-                        draggingCard = null;
-                    }, 0);
+                card.addEventListener('dragstart', function (e) {
+                    draggingCard = e.target;
                 });
             });
 
+            // Her kolon için dragover ve drop event'lerini eklemek
             taskLists.forEach(taskList => {
-                taskList.addEventListener("dragover", function (event) {
-                    event.preventDefault();
-                    const cardBeingDragged = document.querySelector('.dragging');
-                    const closestCard = getClosestCard(event.clientY, taskList);
-
-                    if (closestCard) {
-                        taskList.insertBefore(cardBeingDragged, closestCard);
-                    } else {
-                        taskList.appendChild(cardBeingDragged);
-                    }
+                taskList.addEventListener('dragover', function (e) {
+                    e.preventDefault(); // Dragging sırasında geçici engellemeyi kaldırır
                 });
 
-                taskList.addEventListener("drop", function (event) {
-                    event.preventDefault();
-                    const card = draggingCard;
-                    const column = event.target.closest(".task-list-items");
-                    const newStatus = getNewStatus(column);
+                taskList.addEventListener('drop', function (e) {
+                    e.preventDefault();
 
-                    if (card) {
-                        column.appendChild(card);
-                        updateTaskStatus(card.id, newStatus);
+                    if (draggingCard) {
+                        taskList.appendChild(draggingCard);
+                        const todoId = draggingCard.getAttribute('data-todo-id');
+                        const newStatus = e.target.closest('.tasks').getAttribute('data-status');
+                        updateStatus(todoId, newStatus);
                     }
                 });
             });
 
-            function getClosestCard(y, taskList) {
-                const cards = [...taskList.querySelectorAll('.card')];
-                return cards.reduce((closest, card) => {
-                    const box = card.getBoundingClientRect();
-                    const offset = y - box.top - box.height / 2;
-                    if (offset < 0 && offset > closest.offset) {
-                        return { offset, element: card };
-                    } else {
-                        return closest;
+            // Görev durumunu güncelleme (PUT metodu ile)
+            function updateStatus(todoId, newStatus) {
+                $.ajax({
+                    type: 'PUT', // PUT isteği kullanıyoruz
+                    url: `https://localhost:44305/api/Todo/${todoId}/status?status=${newStatus}`,
+                    success: function (response) {
+                        // İşlem başarılı
+                        console.log('Durum güncellendi:', response);
+                    },
+                    error: function () {
+                        // Hata durumunda
+                        alert('Durum güncellenemedi.');
                     }
-                }, { offset: Number.NEGATIVE_INFINITY }).element;
+                });
             }
-
-            function getNewStatus(column) {
-                // Ensure the column ids are correctly mapped to statuses
-                if (column.id === "task-list-one") return "ToDo";
-                if (column.id === "task-list-two") return "Planning";
-                if (column.id === "task-list-three") return "InProgress";
-                if (column.id === "task-list-four") return "Done";
-                return "";
-            }
-
-            function updateTaskStatus(taskId, newStatus) {
-                 $.ajax({
-             url: 'https://localhost:44305/api/Todo/{taskId}/status?status={status}',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                taskId: taskId,
-                status: newStatus
-            }),
-            success: function (response) {
-                console.log('Görev durumu başarıyla güncellendi');
-            },
-            error: function (error) {
-                console.log('Görev durumu güncellenirken hata oluştu:', error);
-            }
-        });
-        ;
-            }
-
         });
     </script>
-
 </body>
 </html>

@@ -71,23 +71,24 @@ namespace ToDo.Web.Controllers
             }
             return RedirectToAction("Index");
         }
-        [HttpPost]
-        public async Task<IActionResult> UpdateStatus(string taskId, string status)
+        [HttpPut]
+        public async Task<IActionResult> UpdateStatus(int todoId, string status)
         {
             var client = _httpClientFactory.CreateClient();
 
-            var model = new { TaskId = taskId, Status = status };
-            var jsonData = JsonConvert.SerializeObject(model);
-            StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-            var responseMessage = await client.PostAsync("https://localhost:44305/api/Todo/{taskId}/status?status={status}", stringContent);
+            var jsonData = JsonConvert.SerializeObject(new { Status = status });
+            var stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+           
+            var responseMessage = await client.PutAsync($"https://localhost:44305/api/Todo/{todoId}/status", stringContent);
 
             if (responseMessage.IsSuccessStatusCode)
             {
-                return Ok(); // Send a success response back to the client
+                return Ok(new { message = "Status updated successfully!" });
             }
 
-            return StatusCode(500, "Internal Server Error"); // In case of failure
+            return StatusCode(500, "Failed to update status.");
         }
 
 
