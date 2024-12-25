@@ -11,7 +11,15 @@
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* Stil düzenlemeleri */
+        body {
+    overflow-x: hidden;
+}
+    media (max-width: 768px) {
+    .tasks {
+        flex: 1 1 100%; /* Mobilde tüm satırı kaplar */
+    }
+}
+
         .page-title-box .page-title {
             font-size: 18px;
             line-height: 75px;
@@ -25,9 +33,9 @@
         }
 
         .board {
-            display: block;
-            white-space: nowrap;
-            overflow-x: auto;
+            display: contents;
+            gap: 1rem;
+            justify-content: center; 
         }
 
         a {
@@ -62,7 +70,6 @@
         }
 
             .task-list-items:before {
-                content: "No Tasks";
                 position: absolute;
                 line-height: 110px;
                 width: 100%;
