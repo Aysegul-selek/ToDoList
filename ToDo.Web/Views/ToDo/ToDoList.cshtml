@@ -14,6 +14,54 @@
         body {
     overflow-x: hidden;
 }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+        /* Styling for the comment section */
+        .tasks .card-body {
+            position: relative;
+        }
+
+        .comment-btn {
+            cursor: pointer;
+            color: #007bff;
+            font-size: 14px;
+            text-decoration: underline;
+        }
     media (max-width: 768px) {
     .tasks {
         flex: 1 1 100%; /* Mobilde tüm satırı kaplar */
@@ -148,8 +196,10 @@
                                                         <i class="mdi mdi-briefcase-outline text-muted"></i> @todo.UserName
                                                     </span>
                                                     <span class="text-nowrap mb-2 d-inline-block">
-                                                        <i class="mdi mdi-comment-multiple-outline text-muted"></i> <b>@todo.Description</b>
+                                                        <i class="mdi mdi-comment-multiple-outline text-muted comment-btn" data-toggle="modal" data-target="#commentModal@todo.TodoId"></i> <b>@todo.Description</b>
+
                                                     </span>
+                                                   
                                                 </p>
                                             </div>
                                         </div>
@@ -171,7 +221,8 @@
                                                         <i class="mdi mdi-briefcase-outline text-muted"></i> @todo.UserName
                                                     </span>
                                                     <span class="text-nowrap mb-2 d-inline-block">
-                                                        <i class="mdi mdi-comment-multiple-outline text-muted"></i> <b>@todo.Description</b>
+                                                        <i class="mdi mdi-comment-multiple-outline text-muted comment-btn" data-toggle="modal" data-target="#commentModal@todo.TodoId"></i> <b>@todo.Description</b>
+                                                      
                                                     </span>
                                                 </p>
                                             </div>
@@ -194,7 +245,8 @@
                                                         <i class="mdi mdi-briefcase-outline text-muted"></i> @todo.UserName
                                                     </span>
                                                     <span class="text-nowrap mb-2 d-inline-block">
-                                                        <i class="mdi mdi-comment-multiple-outline text-muted"></i> <b>@todo.Description</b>
+                                                        <i class="mdi mdi-comment-multiple-outline text-muted comment-btn" data-toggle="modal" data-target="#commentModal@todo.TodoId"></i> <b>@todo.Description</b>
+
                                                     </span>
                                                 </p>
                                             </div>
@@ -217,7 +269,8 @@
                                                         <i class="mdi mdi-briefcase-outline text-muted"></i> @todo.UserName
                                                     </span>
                                                     <span class="text-nowrap mb-2 d-inline-block">
-                                                        <i class="mdi mdi-comment-multiple-outline text-muted"></i> <b>@todo.Description</b>
+                                                        <i class="mdi mdi-comment-multiple-outline text-muted comment-btn" data-toggle="modal" data-target="#commentModal@todo.TodoId"></i> <b>@todo.Description</b>
+
                                                     </span>
                                                 </p>
                                             </div>
@@ -231,10 +284,69 @@
             </div>
         </div>
     </div>
-
+      <!-- Modal Template -->
+    <div id="commentModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add Comment</h3>
+            <textarea id="commentText" rows="4" cols="50"></textarea>
+            <br><br>
+            <button id="saveCommentBtn">Save</button>
+            <button id="cancelCommentBtn">Cancel</button>
+        </div>
+    </div>
     <footer class="footer">
     </footer>
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+             const modal = document.getElementById("commentModal");
+             const commentBtn = document.querySelectorAll('.comment-btn');
+             const closeBtn = document.querySelector(".close");
+             const saveCommentBtn = document.getElementById("saveCommentBtn");
+             const cancelCommentBtn = document.getElementById("cancelCommentBtn");
+             let currentTodoId = null;
+
+             // Show Modal on Comment Button Click
+             commentBtn.forEach(button => {
+                 button.addEventListener('click', function() {
+                     currentTodoId = button.getAttribute('data-todo-id');
+                     modal.style.display = "block";
+                 });
+             });
+
+             // Close Modal
+             closeBtn.addEventListener('click', function () {
+                 modal.style.display = "none";
+             });
+
+             // Cancel Button - Close Modal
+             cancelCommentBtn.addEventListener('click', function () {
+                 modal.style.display = "none";
+             });
+
+             // Save Comment Button
+             saveCommentBtn.addEventListener('click', function () {
+                 const commentText = document.getElementById("commentText").value;
+
+                 if (commentText.trim()) {
+                     $.ajax({
+                         type: 'POST',
+                         url: `https://localhost:44305/api/Todo/${currentTodoId}/comment`,
+                         data: JSON.stringify({ comment: commentText }),
+                         contentType: 'application/json',
+                         success: function (response) {
+                             console.log("Comment saved:", response);
+                             modal.style.display = "none";
+                         },
+                         error: function () {
+                             alert("Failed to save comment");
+                         }
+                     });
+                 } else {
+                     alert("Please enter a comment.");
+                 }
+             });
+         });
         document.addEventListener("DOMContentLoaded", function () {
             let draggingCard = null;
 
