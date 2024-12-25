@@ -80,4 +80,18 @@ public class TodoController : ControllerBase
 
         return NoContent(); 
     }
+
+    [HttpPut("{id}/description")]
+    public async Task<IActionResult> UpdateTodoDescription(int id, [FromBody] string description)
+    {
+        var todo = await _todoService.GetTodoByIdAsync(id);
+
+        if (todo == null)
+        {
+            return NotFound();
+        }
+
+        await _todoService.UpdateTodoDescriptionAsync(id, description);
+        return NoContent(); // Güncelleme başarılı
+    }
 }

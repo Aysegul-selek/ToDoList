@@ -100,5 +100,15 @@ namespace TodoApp.Data.Repositories
                 }
             }
         }
+
+        public async Task UpdateTodoDescriptionAsync(int id, string description)
+        {
+            var todo = await _context.Todos.FindAsync(id);
+            if (todo != null)
+            {
+                todo.Description = description;
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

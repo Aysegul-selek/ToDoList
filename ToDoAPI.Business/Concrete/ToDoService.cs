@@ -74,5 +74,10 @@ namespace ToDoAPI.Business.Abstract
             var updatedTodo = await _todoRepository.UpdateTodoAsync(todo);
             return _mapper.Map<TodoDto>(updatedTodo);
         }
+
+        public async Task UpdateTodoDescriptionAsync(int id, string description)
+        {
+            await _todoRepository.UpdateTodoDescriptionAsync(id, description);
+        }
     }
 }

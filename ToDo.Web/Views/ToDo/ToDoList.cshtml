@@ -342,18 +342,21 @@
             </div>
         </div>
     </div>
-    <div id="commentModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Add Comment</h3>
-            <textarea id="commentText" rows="3" cols="40"></textarea>
-            <br><br>
-            <div class="modal-buttons">
-                <button id="saveCommentBtn" class="save-btn">Save</button>
-                <button id="cancelCommentBtn" class="cancel-btn">Cancel</button>
-            </div>
+    @foreach (var todo in Model)
+    {
+        <div class="todo-item">
+            <h3>@todo.Title</h3>
+            <button onclick="addComment('@todo.TodoId')" class="add-comment-btn">Add Comment</button>
+
+            <!-- Card için yorum ekleme alanı -->
+            <textarea id="comment-text-@todo.TodoId" placeholder="Add your comment here..."></textarea>
+            <button onclick="saveComment('@todo.TodoId')" class="save-comment-btn">Save</button>
         </div>
-    </div>
+    }
+
+
+
+
 
     <footer class="footer">
     </footer>
@@ -456,6 +459,31 @@
                 });
             }
         });
+                document.addEventListener("DOMContentLoaded", function () {
+            // Yorum ekleme işlemi
+            function saveComment(todoId) {
+                const commentText = document.getElementById("comment-text-" + todoId).value; // Yorum text'ini al
+                if (commentText) {
+                    $.ajax({
+                        url: `https://localhost:44305/api/Todo/${todoId}/description`,  // API URL
+                        type: 'PUT',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ description: commentText }), // JSON formatında gönder
+                        success: function (response) {
+                            alert("Comment saved successfully!");  // Başarı mesajı
+                            // Sayfayı yenilemeden de yorum eklenebilir.
+                            location.reload();    // Sayfayı yenile
+                        },
+                        error: function (error) {
+                            alert("Error saving comment: " + error.responseJSON.message);  // Hata mesajı
+                        }
+                    });
+                } else {
+                    alert("Please enter a comment.");
+                }
+            }
+        });
+thub 
     </script>
 </body>
 </html>
