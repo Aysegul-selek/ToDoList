@@ -15,8 +15,9 @@
     overflow-x: hidden;
 }
 
+        /* Modal stilini ekleyelim */
         .modal {
-            display: none;
+            display: none; /* Başlangıçta görünmez */
             position: fixed;
             z-index: 1;
             left: 0;
@@ -24,7 +25,8 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
+            background-color: rgb(0, 0, 0); /* Fonda koyu renk */
+            background-color: rgba(0, 0, 0, 0.4); /* Şeffaflık ekleyelim */
             padding-top: 60px;
         }
 
@@ -33,35 +35,91 @@
             margin: 5% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 80%;
-            max-width: 400px;
+            width: 80%; /* Modal genişliği */
+            max-width: 500px; /* Maksimum genişlik */
+            border-radius: 10px; /* Yuvarlatılmış köşeler */
+            position: relative; /* Çarpıyı konumlandırabilmek için */
         }
 
         .close {
-            color: #aaa;
-            float: right;
+            color: green;
+            position: absolute;
+            top: 10px;
+            right: 10px;
             font-size: 28px;
             font-weight: bold;
+            cursor: pointer;
         }
 
             .close:hover,
             .close:focus {
                 color: black;
                 text-decoration: none;
-                cursor: pointer;
+            }
+        /* Yorum ekleme stil */
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid green; /* İlk renk */
+            background-color: #fafafa; /* Açık gri arka plan */
+            transition: 0.4s linear;
+            resize: none;
+        }
+
+            /* Hover durumunda pembe renk yerine yeşil tonlarında renk */
+            textarea:hover {
+                border-color: #2e9e2d; /* Yeşil */
+                background-color: #f1f1f1; /* Daha açık gri */
             }
 
-        /* Styling for the comment section */
-        .tasks .card-body {
-            position: relative;
+            /* Focus durumunda odaklanıldığında yeşil bir ton kullan */
+            textarea:focus {
+                border-color: lightgreen;
+                background-color: #e0e0e0; /* Hafif gri */
+                color: black; /* Yazı rengini siyah yap */
+            }
+
+        /* Modal butonları */
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
         }
 
-        .comment-btn {
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            transition: 0.4s linear;
             cursor: pointer;
-            color: #007bff;
-            font-size: 14px;
-            text-decoration: underline;
+            width: 48%;
         }
+
+        .save-btn {
+            background-color: #6f4f37; /* Kahverengi */
+            color: white;
+        }
+
+            .save-btn:hover {
+                background-color: #8e6e54; /* Açık kahverengi */
+            }
+
+        .cancel-btn {
+            background-color: #228b22; /* Yeşil */
+            color: white;
+        }
+
+            .cancel-btn:hover {
+                background-color: #2e9e2d; /* Daha koyu yeşil */
+            }
+
+        /* Popup ve Footer */
+        .footer {
+            padding-top: 235px;
+        }
+
+
     media (max-width: 768px) {
     .tasks {
         flex: 1 1 100%; /* Mobilde tüm satırı kaplar */
@@ -284,17 +342,19 @@
             </div>
         </div>
     </div>
-      <!-- Modal Template -->
     <div id="commentModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h3>Add Comment</h3>
-            <textarea id="commentText" rows="4" cols="50"></textarea>
+            <textarea id="commentText" rows="3" cols="40"></textarea>
             <br><br>
-            <button id="saveCommentBtn">Save</button>
-            <button id="cancelCommentBtn">Cancel</button>
+            <div class="modal-buttons">
+                <button id="saveCommentBtn" class="save-btn">Save</button>
+                <button id="cancelCommentBtn" class="cancel-btn">Cancel</button>
+            </div>
         </div>
     </div>
+
     <footer class="footer">
     </footer>
     <script>
