@@ -15,104 +15,7 @@
     overflow-x: hidden;
 }
 
-        /* Modal stilini ekleyelim */
-        .modal {
-            display: none; /* Başlangıçta görünmez */
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0, 0, 0); /* Fonda koyu renk */
-            background-color: rgba(0, 0, 0, 0.4); /* Şeffaflık ekleyelim */
-            padding-top: 60px;
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%; /* Modal genişliği */
-            max-width: 500px; /* Maksimum genişlik */
-            border-radius: 10px; /* Yuvarlatılmış köşeler */
-            position: relative; /* Çarpıyı konumlandırabilmek için */
-        }
-
-        .close {
-            color: green;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-            .close:hover,
-            .close:focus {
-                color: black;
-                text-decoration: none;
-            }
-        /* Yorum ekleme stil */
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid green; /* İlk renk */
-            background-color: #fafafa; /* Açık gri arka plan */
-            transition: 0.4s linear;
-            resize: none;
-        }
-
-            /* Hover durumunda pembe renk yerine yeşil tonlarında renk */
-            textarea:hover {
-                border-color: #2e9e2d; /* Yeşil */
-                background-color: #f1f1f1; /* Daha açık gri */
-            }
-
-            /* Focus durumunda odaklanıldığında yeşil bir ton kullan */
-            textarea:focus {
-                border-color: lightgreen;
-                background-color: #e0e0e0; /* Hafif gri */
-                color: black; /* Yazı rengini siyah yap */
-            }
-
-        /* Modal butonları */
-        .modal-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-        }
-
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 50px;
-            transition: 0.4s linear;
-            cursor: pointer;
-            width: 48%;
-        }
-
-        .save-btn {
-            background-color: #6f4f37; /* Kahverengi */
-            color: white;
-        }
-
-            .save-btn:hover {
-                background-color: #8e6e54; /* Açık kahverengi */
-            }
-
-        .cancel-btn {
-            background-color: #228b22; /* Yeşil */
-            color: white;
-        }
-
-            .cancel-btn:hover {
-                background-color: #2e9e2d; /* Daha koyu yeşil */
-            }
+      
 
         /* Popup ve Footer */
         .footer {
@@ -242,7 +145,7 @@
                         <div class="board">
                             <!-- TODO Column -->
                             <div class="tasks" data-status="ToDo">
-                                <h5 class="mt-0 task-header" id="todo-header">TODO (0)</h5>
+                               <h5 class="mt-0 task-header" id="todo-header">TODO (@Model.Count(t => t.Status == "ToDo"))</h5>
                                 <div id="task-list-one" class="task-list-items">
                                     @foreach (var todo in Model.Where(t => t.Status == ToDoAPI.Entities.Enums.StatusEnum.ToDo.ToString()))
                                     {
@@ -254,8 +157,11 @@
                                                         <i class="mdi mdi-briefcase-outline text-muted"></i> @todo.UserName
                                                     </span>
                                                     <span class="text-nowrap mb-2 d-inline-block">
-                                                        <i class="mdi mdi-comment-multiple-outline text-muted comment-btn" data-toggle="modal" data-target="#commentModal@todo.TodoId"></i> <b>@todo.Description</b>
-
+                                                        <i class="mdi mdi-comment-multiple-outline text-muted comment-btn"
+                                                           data-todo-id="@todo.TodoId"
+                                                           data-description="@todo.Description">
+                                                        </i>
+                                                        <b>@todo.Description</b>
                                                     </span>
                                                    
                                                 </p>
@@ -279,8 +185,11 @@
                                                         <i class="mdi mdi-briefcase-outline text-muted"></i> @todo.UserName
                                                     </span>
                                                     <span class="text-nowrap mb-2 d-inline-block">
-                                                        <i class="mdi mdi-comment-multiple-outline text-muted comment-btn" data-toggle="modal" data-target="#commentModal@todo.TodoId"></i> <b>@todo.Description</b>
-                                                      
+                                                        <i class="mdi mdi-comment-multiple-outline text-muted comment-btn"
+                                                           data-todo-id="@todo.TodoId"
+                                                           data-description="@todo.Description">
+                                                        </i>
+                                                        <b>@todo.Description</b>
                                                     </span>
                                                 </p>
                                             </div>
@@ -303,8 +212,11 @@
                                                         <i class="mdi mdi-briefcase-outline text-muted"></i> @todo.UserName
                                                     </span>
                                                     <span class="text-nowrap mb-2 d-inline-block">
-                                                        <i class="mdi mdi-comment-multiple-outline text-muted comment-btn" data-toggle="modal" data-target="#commentModal@todo.TodoId"></i> <b>@todo.Description</b>
-
+                                                        <i class="mdi mdi-comment-multiple-outline text-muted comment-btn"
+                                                           data-todo-id="@todo.TodoId"
+                                                           data-description="@todo.Description">
+                                                        </i>
+                                                        <b>@todo.Description</b>
                                                     </span>
                                                 </p>
                                             </div>
@@ -327,8 +239,11 @@
                                                         <i class="mdi mdi-briefcase-outline text-muted"></i> @todo.UserName
                                                     </span>
                                                     <span class="text-nowrap mb-2 d-inline-block">
-                                                        <i class="mdi mdi-comment-multiple-outline text-muted comment-btn" data-toggle="modal" data-target="#commentModal@todo.TodoId"></i> <b>@todo.Description</b>
-
+                                                        <i class="mdi mdi-comment-multiple-outline text-muted comment-btn"
+                                                           data-todo-id="@todo.TodoId"
+                                                           data-description="@todo.Description">
+                                                        </i>
+                                                        <b>@todo.Description</b>
                                                     </span>
                                                 </p>
                                             </div>
@@ -342,77 +257,36 @@
             </div>
         </div>
     </div>
-    <div id="commentModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Add Comment</h3>
-            <textarea id="commentText" rows="4" cols="50"></textarea>
-            <textarea id="commentText" rows="3" cols="40"></textarea>
-            <br><br>
-            <button id="saveCommentBtn">Save</button>
-            <button id="cancelCommentBtn">Cancel</button>
-            <div class="modal-buttons">
-                <button id="saveCommentBtn" class="save-btn">Save</button>
-                <button id="cancelCommentBtn" class="cancel-btn">Cancel</button>
+    <!-- Modal -->
+    <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="commentModalLabel">Yorum Ekle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="commentForm">
+                        <input type="hidden" id="todoId" name="todoId">
+                        <div class="form-group">
+                            <label for="comment">Yorum</label>
+                            <textarea class="form-control" id="comment" name="comment" rows="4"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                    <button type="button" class="btn btn-primary" id="saveCommentBtn">Yorumu Kaydet</button>
+                </div>
             </div>
         </div>
     </div>
 
-
-
-
     <footer class="footer">
     </footer>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-             const modal = document.getElementById("commentModal");
-             const commentBtn = document.querySelectorAll('.comment-btn');
-             const closeBtn = document.querySelector(".close");
-             const saveCommentBtn = document.getElementById("saveCommentBtn");
-             const cancelCommentBtn = document.getElementById("cancelCommentBtn");
-             let currentTodoId = null;
-
-             // Show Modal on Comment Button Click
-             commentBtn.forEach(button => {
-                 button.addEventListener('click', function() {
-                     currentTodoId = button.getAttribute('data-todo-id');
-                     modal.style.display = "block";
-                 });
-             });
-
-             // Close Modal
-             closeBtn.addEventListener('click', function () {
-                 modal.style.display = "none";
-             });
-
-             // Cancel Button - Close Modal
-             cancelCommentBtn.addEventListener('click', function () {
-                 modal.style.display = "none";
-             });
-
-             // Save Comment Button
-             saveCommentBtn.addEventListener('click', function () {
-                 const commentText = document.getElementById("commentText").value;
-
-                 if (commentText.trim()) {
-                     $.ajax({
-                         type: 'POST',
-                         url: `https://localhost:44305/api/Todo/${currentTodoId}/comment`,
-                         data: JSON.stringify({ comment: commentText }),
-                         contentType: 'application/json',
-                         success: function (response) {
-                             console.log("Comment saved:", response);
-                             modal.style.display = "none";
-                         },
-                         error: function () {
-                             alert("Failed to save comment");
-                         }
-                     });
-                 } else {
-                     alert("Please enter a comment.");
-                 }
-             });
-         });
         document.addEventListener("DOMContentLoaded", function () {
             let draggingCard = null;
 
@@ -461,43 +335,99 @@
                     }
                 });
             }
-        });
-             // Function to save the comment
-        function saveComment(todoId) {
-            const commentText = document.getElementById('comment-text-' + todoId).value;
-            if (commentText) {
-                $.ajax({
-                    url: `https://localhost:44305/api/Todo/${todoId}/description`,
-                    type: 'PUT',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ description: commentText }),
-                    success: function (response) {
-                        alert(response.message);  // Show the success message
-                        closeModal(todoId);       // Close the modal
-                        location.reload();        // Reload the page to reflect the changes
-                    },
-                    error: function (error) {
-                        alert('Error: ' + error.responseJSON.message);  // Show error message
-                    }
+
+            // Button işlemine uygun düzenleme
+            const buttons = document.querySelectorAll('button[data-todo-id]'); // Butonları seç
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const todoId = button.getAttribute('data-todo-id'); // Butonun "data-todo-id" değerini al
+                    console.log(todoId); // Bu doğru bir id değeri döndürmelidir
                 });
-            } else {
-                alert("Please enter a comment.");  // Alert if no comment is entered
+            });
+        });
+               document.addEventListener('DOMContentLoaded', function () {
+            const commentButtons = document.querySelectorAll('.comment-btn');
+            const saveCommentButton = document.getElementById('saveCommentBtn');
+
+            // Yorum eklemek için butona tıklandığında modalı aç
+            commentButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const todoId = this.getAttribute('data-todo-id');
+
+                    // Modal içeriğini doldur
+                    document.getElementById('todoId').value = todoId;
+
+                    // Modalda varsa mevcut yorumu çekip ekle (önceki yorum)
+                    fetch(`https://localhost:44305/api/Todo/${todoId}/comments/latest`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data && data.comment) {
+                                document.getElementById('comment').value = data.comment;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Yorum alınamadı:', error);
+                        });
+
+                    // Modalı göster
+                    $('#commentModal').modal('show');
+                });
+            });
+
+            // Yorum kaydet butonuna tıklanınca submitComment fonksiyonunu çağır
+            if (saveCommentButton) {
+                saveCommentButton.addEventListener('click', submitComment);
             }
+
+            // Modalı kapatmak için X butonunun da çalışması lazım
+            const closeModalButton = document.querySelector('.close');
+            if (closeModalButton) {
+                closeModalButton.addEventListener('click', function () {
+                    $('#commentModal').modal('hide'); // Bootstrap modal hide fonksiyonu
+                });
+            }
+        });
+
+               function submitComment() {
+            const todoId = document.getElementById('todoId').value;
+            const comment = document.getElementById('comment').value.trim();
+           
+            if (!comment) {
+                alert('Yorum alanı boş olamaz!');
+                return;
+            }
+
+            fetch(`https://localhost:44305/api/Todo/${todoId}/description `, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ description })  // Yorum verisini JSON formatında gönderiyoruz
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text) });  // Yanıt metnini al
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Yorum başarıyla kaydedildi!');
+                console.log('Kaydedilen yorum:', data);
+                $('#commentModal').modal('hide');
+            })
+            .catch(error => {
+                console.error('Hata:', error);
+                alert(`Bir hata oluştu: ${error.message}`);  // Detaylı hata mesajı göster
+            });
         }
 
-        // Function to open the modal
-        function openModal(todoId) {
-            const modal = document.getElementById('modal-' + todoId);
-            modal.style.display = 'block';
-        }
 
-        // Function to close the modal
-        function closeModal(todoId) {
-            const modal = document.getElementById('modal-' + todoId);
-            modal.style.display = 'none';
-        }
-        console.log(todoId);  // todoId'nin doğru değerini kontrol et
 
     </script>
+    <!-- jQuery'nin Bootstrap'ten önce yüklendiğinden emin olun -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>

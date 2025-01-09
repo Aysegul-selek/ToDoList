@@ -31,7 +31,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-
+app.UseCors();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
