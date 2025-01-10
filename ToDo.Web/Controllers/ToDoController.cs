@@ -90,12 +90,12 @@ namespace ToDo.Web.Controllers
 
             return StatusCode(500, "Failed to update status.");
         }
-        [HttpPut]
-        public async Task<IActionResult> UpdateDescription(int todoId, string description)
+        [HttpPut("{todoId}/description")]
+        public async Task<IActionResult> UpdateDescription(int todoId, [FromBody] string description)
         {
             var client = _httpClientFactory.CreateClient();
 
-            // UpdateDescriptionDTO ile yeni açıklama verisini gönderiyoruz
+         
             var updateDescriptionDTO = new TodoDto
             {
                 TodoId = todoId,
@@ -115,10 +115,6 @@ namespace ToDo.Web.Controllers
             return StatusCode(500, "Failed to update description.");
         }
 
+
     }
-}
-public class UpdateStatusDTO
-{
-    public int Id { get; set; }
-    public string Status { get; set; }
 }

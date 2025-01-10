@@ -348,16 +348,10 @@
                document.addEventListener('DOMContentLoaded', function () {
             const commentButtons = document.querySelectorAll('.comment-btn');
             const saveCommentButton = document.getElementById('saveCommentBtn');
-
-            // Yorum eklemek için butona tıklandığında modalı aç
             commentButtons.forEach(button => {
                 button.addEventListener('click', function () {
                     const todoId = this.getAttribute('data-todo-id');
-
-                    // Modal içeriğini doldur
                     document.getElementById('todoId').value = todoId;
-
-                    // Modalda varsa mevcut yorumu çekip ekle (önceki yorum)
                     fetch(`https://localhost:44305/api/Todo/${todoId}/comments/latest`)
                         .then(response => response.json())
                         .then(data => {
@@ -368,64 +362,64 @@
                         .catch(error => {
                             console.error('Yorum alınamadı:', error);
                         });
-
-                    // Modalı göster
                     $('#commentModal').modal('show');
                 });
             });
 
-            // Yorum kaydet butonuna tıklanınca submitComment fonksiyonunu çağır
             if (saveCommentButton) {
                 saveCommentButton.addEventListener('click', submitComment);
             }
-
-            // Modalı kapatmak için X butonunun da çalışması lazım
             const closeModalButton = document.querySelector('.close');
             if (closeModalButton) {
                 closeModalButton.addEventListener('click', function () {
-                    $('#commentModal').modal('hide'); // Bootstrap modal hide fonksiyonu
+                    $('#commentModal').modal('hide')
                 });
             }
         });
-
-               function submitComment() {
+                     function submitComment() {
             const todoId = document.getElementById('todoId').value;
             const comment = document.getElementById('comment').value.trim();
-           
+
             if (!comment) {
                 alert('Yorum alanı boş olamaz!');
                 return;
             }
 
-            fetch(`https://localhost:44305/api/Todo/${todoId}/description `, {
+            fetch(`https://localhost:44305/api/Todo/${todoId}/description`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({ description })  // Yorum verisini JSON formatında gönderiyoruz
+                body: JSON.stringify(comment)  
             })
             .then(response => {
+             
                 if (!response.ok) {
-                    return response.text().then(text => { throw new Error(text) });  // Yanıt metnini al
+                    return response.text().then(text => { throw new Error(text) });
+                }
+
+                if (response.status === 204) {
+
+                    alert('Yorum başarıyla kaydedildi!');
+                    $('#commentModal').modal('hide');
+                     window.location.reload();
+                    return; 
                 }
                 return response.json();
             })
             .then(data => {
-                alert('Yorum başarıyla kaydedildi!');
-                console.log('Kaydedilen yorum:', data);
-                $('#commentModal').modal('hide');
+                if (data) {
+                    alert('Yorum başarıyla kaydedildi!');
+                    console.log('Kaydedilen yorum:', data);
+                }
             })
             .catch(error => {
                 console.error('Hata:', error);
-                alert(`Bir hata oluştu: ${error.message}`);  // Detaylı hata mesajı göster
+                alert(`Bir hata oluştu: ${error.message}`);
             });
         }
-
-
-
     </script>
-    <!-- jQuery'nin Bootstrap'ten önce yüklendiğinden emin olun -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
