@@ -31,10 +31,9 @@ namespace ToDo.Web.Controllers
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
                 var values = JsonConvert.DeserializeObject<List<TodoDto>>(jsonData);
 
-                // Convert the StatusEnum to a string representation
                 foreach (var todo in values)
                 {
-                    // Check if the Status is a valid enum value and convert it to its name
+
                     if (Enum.TryParse(typeof(StatusEnum), todo.Status, out var statusEnumValue))
                     {
                         todo.Status = Enum.GetName(typeof(StatusEnum), statusEnumValue);
