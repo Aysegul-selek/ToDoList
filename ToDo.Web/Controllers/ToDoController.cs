@@ -70,50 +70,5 @@ namespace ToDo.Web.Controllers
             }
             return RedirectToAction("Index");
         }
-        [HttpPut]
-        public async Task<IActionResult> UpdateStatus(int todoId, string status)
-        {
-            var client = _httpClientFactory.CreateClient();
-
-
-            var jsonData = JsonConvert.SerializeObject(new { Status = status });
-            var stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-
-           
-            var responseMessage = await client.PutAsync($"https://localhost:44305/api/Todo/{todoId}/status", stringContent);
-
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                return Ok(new { message = "Status updated successfully!" });
-            }
-
-            return StatusCode(500, "Failed to update status.");
-        }
-        [HttpPut("{todoId}/description")]
-        public async Task<IActionResult> UpdateDescription(int todoId, [FromBody] string description)
-        {
-            var client = _httpClientFactory.CreateClient();
-
-         
-            var updateDescriptionDTO = new TodoDto
-            {
-                TodoId = todoId,
-                Description = description
-            };
-
-            var jsonData = JsonConvert.SerializeObject(updateDescriptionDTO);
-            var stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-
-            var responseMessage = await client.PutAsync($"https://localhost:44305/api/Todo/{todoId}/description", stringContent);
-
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                return Ok(new { message = "Description updated successfully!" });
-            }
-
-            return StatusCode(500, "Failed to update description.");
-        }
-
-
     }
 }
