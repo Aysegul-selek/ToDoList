@@ -11,21 +11,56 @@
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        .btn-warning {
+            background-color: #FFA500; 
+            border-color: #FFA500; 
+            color: white; 
+        }
+
+            .btn-warning:hover {
+                background-color: #FF8C00; 
+                border-color: #FF8C00; 
+            }
+
+        .modal-content {
+            border-radius: 10px; 
+        }
+
+        .modal-header {
+            background-color: #8B4513; 
+            color: black; 
+            border-top-left-radius: 10px; 
+            border-top-right-radius: 10px; 
+            display: flex;
+            justify-content: space-between; 
+            align-items: center; 
+        }
+
+        .modal-footer button {
+            font-weight: bold; 
+            text-transform: uppercase; 
+        }
+
+        .form-control {
+            border-radius: 8px; 
+            background-color: #f1f1f1; 
+            border: 1px solid #ccc; 
+        }
+
+            .form-control:focus {
+                border-color: #FFA500;
+                box-shadow: 0 0 5px rgba(255, 165, 0, 0.5); 
+            }
         body {
     overflow-x: hidden;
 }
 
-      
-
-        /* Popup ve Footer */
         .footer {
             padding-top: 235px;
         }
-
-
     media (max-width: 768px) {
     .tasks {
-        flex: 1 1 100%; /* Mobilde tüm satırı kaplar */
+        flex: 1 1 100%; 
     }
 }
 
@@ -66,7 +101,7 @@
         }
 
             .tasks .task-header {
-                background-color: #f6f7fb;
+                background-color: #C1DE7E;
                 padding: 1rem;
                 margin: 0 -1rem;
                 font-size: 15px;
@@ -261,9 +296,10 @@
     <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" style="background-color: #8B4513; color: white;">
                     <h5 class="modal-title" id="commentModalLabel">Yorum Ekle</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <!-- X butonunu sağa yerleştirdik ve rengini değiştirdik -->
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white; font-size: 1.5rem; background: none; border: none;">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -272,13 +308,12 @@
                         <input type="hidden" id="todoId" name="todoId">
                         <div class="form-group">
                             <label for="comment">Yorum</label>
-                            <textarea class="form-control" id="comment" name="comment" rows="4"></textarea>
+                            <textarea class="form-control" id="comment" name="comment" rows="4" placeholder="Yorumunuzu buraya yazın..."></textarea>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
-                    <button type="button" class="btn btn-primary" id="saveCommentBtn">Yorumu Kaydet</button>
+                    <button type="button" class="btn btn-warning" id="saveCommentBtn">Yorumu Kaydet</button>
                 </div>
             </div>
         </div>
