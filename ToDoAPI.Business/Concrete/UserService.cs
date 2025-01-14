@@ -42,11 +42,11 @@ namespace ToDoAPI.Business.Abstract
             var user = await _userRepository.GetByUsernameAsync(loginDto.Username);
             if (user == null) throw new Exception("User not found.");
 
-            // Şifre kontrolü
+          
             var hashedPassword = PasswordHelper.HashPassword(loginDto.Password);
             if (user.PasswordHash != hashedPassword) throw new Exception("Invalid password.");
 
-            // Kullanıcı doğrulandı, token oluşturma
+         
             var claims = new[]
             {
             new Claim(ClaimTypes.Name, user.Username),
@@ -70,7 +70,7 @@ namespace ToDoAPI.Business.Abstract
         {
             var existingUser = await _userRepository.GetByUsernameAsync(registerDto.Username);
             if (existingUser != null) throw new Exception("User already exists.");
-            // Kullanıcı oluşturma
+           
             var user = _mapper.Map<User>(registerDto);
             user.PasswordHash = PasswordHelper.HashPassword(registerDto.Password);
 
