@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Register";
+}
+
+<h2>Register</h2>
+
+<form id="register-form">
+    <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username" required />
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" required />
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>
+
+
+<script>
+        document.getElementById("register-form").addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        var username = document.getElementById("username").value;
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+
+        const response = await fetch("https://localhost:44305/api/Auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: username,
+                email: email,  
+                password: password
+            })
+        });
+
+        if (response.ok) {
+            alert("Registration successful!");
+            window.location.href = "/Account/Login";
+        } else {
+            alert("Registration failed.");
+        }
+    });
+
+</script>

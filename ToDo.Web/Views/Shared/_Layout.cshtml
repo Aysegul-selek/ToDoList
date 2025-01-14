@@ -15,7 +15,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="ToDo" asp-action="ToDoList">
+                <a class="navbar-brand" asp-area="" asp-controller="ToDo" asp-action="TodoList">
                     <i class="bi bi-kanban"></i> ToDoList
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,19 +24,30 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" asp-area="" asp-controller="ToDo" asp-action="Detail">Details</a>
+                            <a class="nav-link active" asp-area="" asp-controller="ToDo" asp-action="Detail">Detail</a>
                         </li>
-                       
+                     @*   @*  <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="ToDo" asp-action="Boards">Boards</a> <!-- Pano Sayfası -->
+                        </li > *@
                        @*  <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="ToDo" asp-action="Archived">Archived</a> 
+                            <a class="nav-link" asp-area="" asp-controller="ToDo" asp-action="Archived">Archived</a> <!-- Arşivlenmiş Görevler -->
                         </li> *@
                     </ul>
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Notifications</a> 
+                    <ul class="navbar-nav ms-auto" id="account-nav">
+                        <!-- Giriş yapmadıysa login ve register göster -->
+                        <li class="nav-item" id="login-link">
+                            <a class="nav-link" href="/Account/Login">Login</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Account</a> 
+                        <li class="nav-item" id="register-link">
+                            <a class="nav-link" href="/Account/Register">Register</a>
+                        </li>
+
+                        <!-- Giriş yaptıysa profil ve logout göster -->
+                        <li class="nav-item" id="profile-link" style="display:none;">
+                            <a class="nav-link" href="/Account/Profile">Profile</a>
+                        </li>
+                        <li class="nav-item" id="logout-link" style="display:none;">
+                            <a class="nav-link" href="#" onclick="logout()">Logout</a>
                         </li>
                     </ul>
                 </div>
@@ -60,6 +71,34 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // localStorage'dan token'ı al
+            var token = localStorage.getItem("token");
+
+            // Eğer token varsa, login/register linklerini gizle, profil ve logout linklerini göster
+            if (token) {
+                document.getElementById("login-link").style.display = "none";
+                document.getElementById("register-link").style.display = "none";
+                document.getElementById("profile-link").style.display = "block";
+                document.getElementById("logout-link").style.display = "block";
+            } else {
+                document.getElementById("login-link").style.display = "block";
+                document.getElementById("register-link").style.display = "block";
+                document.getElementById("profile-link").style.display = "none";
+                document.getElementById("logout-link").style.display = "none";
+            }
+        });
+
+        // Logout işlemi
+        function logout() {
+            // localStorage'dan token'ı sil
+            localStorage.removeItem("token");
+
+            // Sayfayı yenileyerek navbar'ı tekrar kontrol et
+            window.location.reload();
+        }
+    </script>
 
 </body>
 </html>
