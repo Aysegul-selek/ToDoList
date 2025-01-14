@@ -61,12 +61,12 @@ namespace ToDo.Web.Controllers
         public async Task<IActionResult> Detail(int id)
         {
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://localhost:44305/api/Todo/{id}");
+            var responseMessage = await client.GetAsync("https://localhost:44305/api/Todo");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
-                var todo = JsonConvert.DeserializeObject<TodoDto>(jsonData);
-                return View(todo);
+                var todos = JsonConvert.DeserializeObject<List<TodoDto>>(jsonData); 
+                return View(todos);
             }
             return RedirectToAction("Index");
         }

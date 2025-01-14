@@ -1,7 +1,25 @@
-﻿@model ToDoAPI.Entities.DTOs.ToDo.TodoDto
-<h1>ToDo Details</h1>
-<p><strong>Title:</strong> @Model.Title</p>
-<p><strong>Description:</strong> @Model.Description</p>
-<p><strong>Status:</strong> @Model.Status</p>
-<p><strong>User:</strong> @Model.UserName</p>
-<a href="/Todo/Index">Back to List</a>
+﻿@model List<ToDoAPI.Entities.DTOs.ToDo.TodoDto>
+
+<h1>ToDo List</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>User</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var todo in Model)
+        {
+            <tr>
+                <td>@todo.Title</td>
+                <td>@todo.Description</td>
+                <td>@todo.Status</td>
+                <td>@todo.UserName</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a href="/Todo/ToDoList" class="btn btn-primary">Back to List</a>
