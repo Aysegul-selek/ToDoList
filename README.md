@@ -1,1 +1,1 @@
-# ToDoApı
+This project is a ToDo List application where users can manage their tasks and visually track their progress across different states (To Do, Planning, In Progress, Done). Users can add titles, descriptions, and comments to tasks and update their statuses by dragging and dropping tasks. The project is built with separate API and MVC layers, with Entity Framework handling database operations and JWT (JSON Web Tokens) ensuring secure user authentication.
