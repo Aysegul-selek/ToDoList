@@ -1,30 +1,43 @@
 ﻿@model ToDoAPI.Entities.DTOs.ToDo.TodoCreateDTO
-<h1>Create New ToDo</h1>
-<form method="post" asp-action="Create">
-    <div>
-        <label>Title</label>
-        <input asp-for="Title" />
+
+<!-- Create New ToDo Section -->
+<div class="modal-dialog" role="document" style="max-width: 500px; margin: auto;">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color: #8B4513; color: white;">
+            <h5 class="modal-title">Create New ToDo</h5>
+        </div>
+        <div class="modal-body">
+            <!-- Form for creating a new ToDo -->
+            <form method="post" asp-action="Create">
+                <div class="form-group">
+                    <label for="Title">Title</label>
+                    <input asp-for="Title" class="form-control" id="Title" />
+                </div>
+                <div class="form-group">
+                    <label for="Description">Description</label>
+                    <input asp-for="Description" class="form-control" id="Description" />
+                </div>
+                <div class="form-group">
+                    <label for="UserId">User ID</label>
+                    <input asp-for="UserId" class="form-control" id="UserId" />
+                </div>
+                <div class="form-group">
+                    <label for="UserName">User Name</label>
+                    <input asp-for="UserName" class="form-control" id="UserName" />
+                </div>
+                <div class="form-group">
+                    <label for="Status">Status</label>
+                    <select asp-for="Status" class="form-control" id="Status">
+                        <option value="1">Pending</option>
+                        <option value="2">In Progress</option>
+                        <option value="3">Completed</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-warning">Save</button>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a href="/Todo/TodoList" class="btn btn-secondary">Back to List</a>
+        </div>
     </div>
-    <div>
-        <label>Description</label>
-        <input asp-for="Description" />
-    </div>
-    <div>
-        <label>User ID</label>
-        <input asp-for="UserId" />
-    </div>
-    <div>
-        <label>User Name</label>
-        <input asp-for="UserName" />
-    </div>
-    <div>
-        <label>Status</label>
-        <select asp-for="Status">
-            <option value="1">Pending</option>
-            <option value="2">In Progress</option>
-            <option value="3">Completed</option>
-        </select>
-    </div>
-    <button type="submit">Save</button>
-</form>
-<a href="/Todo/Index">Back to List</a>
+</div>

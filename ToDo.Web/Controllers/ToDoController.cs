@@ -44,7 +44,11 @@ namespace ToDo.Web.Controllers
             }
             return View();
         }
-
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View(); 
+        }
         [HttpPost]
         public async Task<IActionResult> Create(TodoCreateDTO model)
         {
@@ -54,7 +58,7 @@ namespace ToDo.Web.Controllers
             var responseMessage = await client.PostAsync("https://localhost:44305/api/Todo", stringContent);
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("ToDoList");
             }
             return View();
         }
