@@ -172,7 +172,7 @@
     </style>
 </head>
 <body>
-    <a href="/Todo/Create" class="btn btn-primary" style="margin-bottom: 15px;">Create</a>
+  
     <br />
     <div class="wrapper">
         <div class="content">
@@ -182,7 +182,11 @@
                         <div class="board">
                             <!-- TODO Column -->
                             <div class="tasks" data-status="ToDo">
-                               <h5 class="mt-0 task-header" id="todo-header">TODO (@Model.Count(t => t.Status == "ToDo"))</h5>
+                                <h5 class="mt-0 task-header" id="todo-header">
+                                    TODO (@Model.Count(t => t.Status == "ToDo"))
+                                    <!-- + Ekle Butonu -->
+                                    <a href="/Todo/Create" class="btn btn-success btn-sm" style="float: right; margin-top: -5px;">+</a>
+                                </h5>
                                 <div id="task-list-one" class="task-list-items">
                                     @foreach (var todo in Model.Where(t => t.Status == ToDoAPI.Entities.Enums.StatusEnum.ToDo.ToString()))
                                     {
@@ -200,7 +204,6 @@
                                                         </i>
                                                         <b>@todo.Description</b>
                                                     </span>
-                                                   
                                                 </p>
                                             </div>
                                         </div>
@@ -210,7 +213,11 @@
 
                             <!-- IN PROGRESS Column -->
                             <div class="tasks" data-status="Planning">
-                                <h5 class="mt-0 task-header" id="progress-header">Planning (0)</h5>
+                                <h5 class="mt-0 task-header" id="progress-header">
+                                    Planning (0)
+                                    <!-- + Ekle Butonu -->
+                                    <a href="/Todo/Create" class="btn btn-success btn-sm" style="float: right; margin-top: -5px;">+</a>
+                                </h5>
                                 <div id="task-list-two" class="task-list-items">
                                     @foreach (var todo in Model.Where(t => t.Status == ToDoAPI.Entities.Enums.StatusEnum.Planning.ToString()))
                                     {
@@ -237,7 +244,11 @@
 
                             <!-- IN PROGRESS Column -->
                             <div class="tasks" data-status="InProgress">
-                                <h5 class="mt-0 task-header" id="inprogress-header">InProgress (0)</h5>
+                                <h5 class="mt-0 task-header" id="inprogress-header">
+                                    InProgress (0)
+                                    <!-- + Ekle Butonu -->
+                                    <a href="/Todo/Create" class="btn btn-success btn-sm" style="float: right; margin-top: -5px;">+</a>
+                                </h5>
                                 <div id="task-list-three" class="task-list-items">
                                     @foreach (var todo in Model.Where(t => t.Status == ToDoAPI.Entities.Enums.StatusEnum.InProgress.ToString()))
                                     {
@@ -264,7 +275,11 @@
 
                             <!-- DONE Column -->
                             <div class="tasks" data-status="Done">
-                                <h5 class="mt-0 task-header" id="done-header">Done</h5>
+                                <h5 class="mt-0 task-header" id="done-header">
+                                    Done
+                                    <!-- + Ekle Butonu -->
+                                    <a href="/Todo/Create" class="btn btn-success btn-sm" style="float: right; margin-top: -5px;">+</a>
+                                </h5>
                                 <div id="task-list-four" class="task-list-items">
                                     @foreach (var todo in Model.Where(t => t.Status == ToDoAPI.Entities.Enums.StatusEnum.Done.ToString()))
                                     {
@@ -293,6 +308,7 @@
                 </div>
             </div>
         </div>
+
     </div>
     <!-- Modal -->
     <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">

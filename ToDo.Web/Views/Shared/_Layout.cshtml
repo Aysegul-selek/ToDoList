@@ -4,16 +4,81 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ToDo</title>
-    <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-  
-
     <link href="~/css/todolist.css" rel="stylesheet" />
+    <style>
+        /* Dropdown User Menu */
+        .dropdown-user {
+            position: relative;
+            display: inline-block;
+        }
+
+            .dropdown-user .dropdown-menu {
+                display: none; /* Başlangıçta gizli */
+                position: absolute;
+                top: 100%;
+                right: 0;
+                min-width: 200px;
+                background-color: #ffffff;
+                border: 1px solid #ddd;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+                border-radius: 5px;
+            }
+
+            .dropdown-user .dropdown-item {
+                padding: 12px 20px;
+                color: #333;
+                text-decoration: none;
+                display: block;
+                font-size: 14px;
+                border-bottom: 1px solid #f1f1f1;
+            }
+
+                .dropdown-user .dropdown-item:hover {
+                    background-color: #f4f4f4;
+                    color: #007bff;
+                }
+
+            /* Avatar */
+            .dropdown-user img {
+                border-radius: 50%;
+                width: 30px;
+                height: 30px;
+                object-fit: cover;
+            }
+
+            /* Username next to avatar */
+            .dropdown-user .user-name {
+                margin-left: 10px;
+                font-size: 14px;
+                color: #333;
+                line-height: 30px; /* Align with avatar */
+            }
+
+        /* Navbar Colors */
+        .navbar {
+            background-color: #007bff;
+        }
+
+            .navbar .navbar-nav .nav-link {
+                color: #fff;
+            }
+
+                .navbar .navbar-nav .nav-link:hover {
+                    color: #f4f4f4;
+                }
+
+        /* Hover for Dropdown Toggle */
+        .dropdown-user:hover > a {
+            color: #f4f4f4;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="ToDo" asp-action="TodoList">
                     <i class="bi bi-kanban"></i> ToDoList
@@ -24,17 +89,11 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" asp-area="" asp-controller="ToDo" asp-action="Detail">Detail</a>
+                            <a class="nav-link active" asp-area="" asp-controller="ToDo" asp-action="Detail">Details</a>
                         </li>
-                     @*   @*  <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="ToDo" asp-action="Boards">Boards</a> <!-- Pano Sayfası -->
-                        </li > *@
-                       @*  <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="ToDo" asp-action="Archived">Archived</a> <!-- Arşivlenmiş Görevler -->
-                        </li> *@
                     </ul>
                     <ul class="navbar-nav ms-auto" id="account-nav">
-                        <!-- Giriş yapmadıysa login ve register göster -->
+                        <!-- Links for Login and Register (shown when user is not logged in) -->
                         <li class="nav-item" id="login-link">
                             <a class="nav-link" href="/Account/Login">Login</a>
                         </li>
@@ -42,12 +101,17 @@
                             <a class="nav-link" href="/Account/Register">Register</a>
                         </li>
 
-                        <!-- Giriş yaptıysa profil ve logout göster -->
-                        <li class="nav-item" id="profile-link" style="display:none;">
-                            <a class="nav-link" href="/Account/Profile">Profile</a>
-                        </li>
-                        <li class="nav-item" id="logout-link" style="display:none;">
-                            <a class="nav-link" href="#" onclick="logout()">Logout</a>
+                        <!-- Profile Dropdown (shown when user is logged in) -->
+                        <li class="nav-item dropdown-user" id="profile-link" style="display:none;">
+                            <a class="nav-link" href="#" id="user-dropdown-toggle">
+                                <img src="https://www.gravatar.com/avatar/ce21e05eba5c9e5889d78a37407b11d9?s=200" alt="User Avatar">
+                                <span class="user-name">@ViewData["Username"]</span> <!-- User's name -->
+                            </a>
+                            <div class="dropdown-menu">
+                                <a href="/Account/Profile" class="dropdown-item">My Profile</a>
+                                <a href="/Account/Settings" class="dropdown-item">Account Settings</a>
+                                <a href="/Account/Logout" class="dropdown-item">Logout</a>
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -55,50 +119,25 @@
         </nav>
     </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <!-- RenderBody: Page content rendered here -->
+    @RenderBody()
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - ToDo.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // localStorage'dan token'ı al
-            var token = localStorage.getItem("token");
-
-            // Eğer token varsa, login/register linklerini gizle, profil ve logout linklerini göster
-            if (token) {
-                document.getElementById("login-link").style.display = "none";
-                document.getElementById("register-link").style.display = "none";
-                document.getElementById("profile-link").style.display = "block";
-                document.getElementById("logout-link").style.display = "block";
-            } else {
-                document.getElementById("login-link").style.display = "block";
-                document.getElementById("register-link").style.display = "block";
-                document.getElementById("profile-link").style.display = "none";
-                document.getElementById("logout-link").style.display = "none";
-            }
-        });
-
-        // Logout işlemi
-        function logout() {
-            // localStorage'dan token'ı sil
-            localStorage.removeItem("token");
-
-            // Sayfayı yenileyerek navbar'ı tekrar kontrol et
-            window.location.reload();
+        // Kullanıcı adı mevcutsa, profile-link gösterilsin ve giriş/üyelik linkleri gizlensin
+        var username = '@ViewData["Username"]'; // Razor ile kullanıcı adını alıyoruz
+        if (username) {
+            document.getElementById('profile-link').style.display = 'block';
+            document.getElementById('login-link').style.display = 'none';
+            document.getElementById('register-link').style.display = 'none';
         }
-    </script>
 
+        // Kullanıcı tıkladığında dropdown menüsünü açma/kapatma işlemi
+        document.getElementById('user-dropdown-toggle').addEventListener('click', function (event) {
+            event.preventDefault();  // Linkin varsayılan davranışını engelle
+            var dropdownMenu = document.querySelector('.dropdown-menu');
+            // Eğer dropdown menüsü açıksa, kapat; değilse aç
+            dropdownMenu.style.display = (dropdownMenu.style.display === 'block') ? 'none' : 'block';
+        });
+    </script>
 </body>
 </html>

@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using ToDo.Web.Models;
+using ToDoAPI.Entities.DTOs;
 using ToDoAPI.Entities.DTOs.Auth;  // Kullanıcı kayıt ve giriş modelini burada tanımlayabilirsiniz
 
 namespace ToDo.Web.Controllers
@@ -72,13 +73,23 @@ namespace ToDo.Web.Controllers
                     var token = JsonConvert.DeserializeObject<TokenResponse>(jsonResponse);
 
                     // Token'ı local storage veya cookie'ye kaydedebilirsiniz
-                    // Burada token'ı kullanıcının kimliğini doğrulamak için saklayabilirsiniz
                     Response.Cookies.Append("AuthToken", token.AccessToken, new Microsoft.AspNetCore.Http.CookieOptions
                     {
                         HttpOnly = true,
                         Secure = true,
                         SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict
                     });
+
+                    // Kullanıcı adı almak için API çağrısı yapılabilir
+                    var userNameResponse = await client.GetAsync("https://localhost:44305/api/Auth/user");  // Bu API'yi oluşturduğunuzda kullanıcı bilgilerini döndürmelidir
+                    if (userNameResponse.IsSuccessStatusCode)
+                    {
+                        var userInfo = await userNameResponse.Content.ReadAsStringAsync();
+                        var user = JsonConvert.DeserializeObject<UserDto>(userInfo);  // UserDto: Kullanıcı bilgilerini içeren model
+
+                        // Kullanıcı adını ViewData'ya ekle
+                        ViewData["KullaniciAdi"] = user.FullName;  // UserDto içinde UserName propertysini kullanarak
+                    }
 
                     return RedirectToAction("Index", "ToDo");  // Giriş başarılıysa ToDo ana sayfasına yönlendir
                 }
