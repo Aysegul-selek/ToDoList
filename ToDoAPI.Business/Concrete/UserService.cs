@@ -32,9 +32,18 @@ namespace ToDoAPI.Business.Abstract
         public async  Task<UserDto> GetUserByIdAsync(int id)
         {
             var user = await _userRepository.GetByIdAsync(id);
-            if (user == null) throw new Exception("User not found");
-            return _mapper.Map<UserDto>(user);
-           
+
+            if (user == null)
+            {
+                throw new Exception("Kullanıcı bulunamadı.");
+            }
+
+            return new UserDto
+            {
+                FullName = user.Username,
+                Email = user.Email
+            };
+
         }
 
         public async Task<string> LoginAsync(LoginDto loginDto)

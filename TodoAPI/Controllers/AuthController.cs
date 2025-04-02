@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using ToDoAPI.Business.Abstract;
 using ToDoAPI.Business.Concrete;
+using ToDoAPI.Entities.DTOs;
 using ToDoAPI.Entities.DTOs.Auth;
 
 namespace TodoAPI.Controllers
@@ -29,5 +32,35 @@ namespace TodoAPI.Controllers
             var response = await _userService.LoginAsync(loginDto);
             return Ok(response);
         }
+
+        // Kullanıcı bilgilerini almak için endpoint
+        [HttpGet("user")]
+        [Authorize] // Kimlik doğrulaması yapılması gerektiğini belirtiyoruz
+        public async Task<IActionResult> GetUserInfo()
+        {
+            var userIdString = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userIdString))
+            {
+                return Unauthorized();  // Eğer kimlik doğrulama yapılmamışsa 401 döndürüyoruz
+            }
+
+            // Try to convert the userId from string to int
+            if (!int.TryParse(userIdString, out int userId))
+            {
+                return Unauthorized(); // If conversion fails, return unauthorized
+            }
+
+            var user = await _userService.GetUserByIdAsync(userId);  // Pass the integer userId
+
+            if (user == null)
+            {
+                return NotFound("Kullanıcı bulunamadı.");
+            }
+
+            return Ok(user);
+
+        }
+
     }
 }

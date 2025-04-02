@@ -1,11 +1,14 @@
 ﻿using IdentityModel.Client;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using ToDo.Web.Models;
+using ToDoAPI.Business.Concrete;
 using ToDoAPI.Entities.DTOs;
 using ToDoAPI.Entities.DTOs.Auth;  // Kullanıcı kayıt ve giriş modelini burada tanımlayabilirsiniz
 
@@ -14,7 +17,6 @@ namespace ToDo.Web.Controllers
     public class AccountController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
-
         public AccountController(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
@@ -55,7 +57,6 @@ namespace ToDo.Web.Controllers
             return View();
         }
 
-        // Giriş Yapma POST isteği
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto model)
         {
@@ -72,7 +73,7 @@ namespace ToDo.Web.Controllers
                     var jsonResponse = await responseMessage.Content.ReadAsStringAsync();
                     var token = JsonConvert.DeserializeObject<TokenResponse>(jsonResponse);
 
-                    // Token'ı local storage veya cookie'ye kaydedebilirsiniz
+                    // Token'ı cookie'ye kaydediyoruz
                     Response.Cookies.Append("AuthToken", token.AccessToken, new Microsoft.AspNetCore.Http.CookieOptions
                     {
                         HttpOnly = true,
@@ -80,18 +81,18 @@ namespace ToDo.Web.Controllers
                         SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict
                     });
 
-                    // Kullanıcı adı almak için API çağrısı yapılabilir
-                    var userNameResponse = await client.GetAsync("https://localhost:44305/api/Auth/user");  // Bu API'yi oluşturduğunuzda kullanıcı bilgilerini döndürmelidir
+                    // Kullanıcı adı almak için API çağrısı
+                    var userNameResponse = await client.GetAsync("https://localhost:44305/api/Auth/user");
                     if (userNameResponse.IsSuccessStatusCode)
                     {
                         var userInfo = await userNameResponse.Content.ReadAsStringAsync();
-                        var user = JsonConvert.DeserializeObject<UserDto>(userInfo);  // UserDto: Kullanıcı bilgilerini içeren model
+                        var user = JsonConvert.DeserializeObject<UserDto>(userInfo);
 
                         // Kullanıcı adını ViewData'ya ekle
-                        ViewData["KullaniciAdi"] = user.FullName;  // UserDto içinde UserName propertysini kullanarak
+                        ViewData["Username"] = user.FullName;  // Burada kullanıcı adı "FullName" olarak alındı.
                     }
 
-                    return RedirectToAction("Index", "ToDo");  // Giriş başarılıysa ToDo ana sayfasına yönlendir
+                    return RedirectToAction("Index", "ToDo");
                 }
 
                 // Hata durumunda mesaj göster
@@ -99,7 +100,6 @@ namespace ToDo.Web.Controllers
             }
             return View(model);
         }
-
         // Çıkış Yapma
         public IActionResult Logout()
         {
