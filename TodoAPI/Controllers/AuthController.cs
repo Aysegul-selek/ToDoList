@@ -33,9 +33,8 @@ namespace TodoAPI.Controllers
             return Ok(response);
         }
 
-        // Kullanıcı bilgilerini almak için endpoint
         [HttpGet("user")]
-        [Authorize] // Kimlik doğrulaması yapılması gerektiğini belirtiyoruz
+        [Authorize] 
         public async Task<IActionResult> GetUserInfo()
         {
             var userIdString = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
