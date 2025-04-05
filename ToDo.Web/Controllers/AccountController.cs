@@ -89,7 +89,7 @@ namespace ToDo.Web.Controllers
                         var user = JsonConvert.DeserializeObject<UserDto>(userInfo);
 
                         // Kullanıcı adını ViewData'ya ekle
-                        ViewData["Username"] = user.FullName;  // Burada kullanıcı adı "FullName" olarak alındı.
+                        ViewData["UserName"] = user.UserName;  // Burada kullanıcı adı "FullName" olarak alındı.
                     }
 
                     return RedirectToAction("Index", "ToDo");

@@ -40,7 +40,7 @@ namespace ToDoAPI.Business.Abstract
 
             return new UserDto
             {
-                FullName = user.Username,
+                UserName = user.Username,
                 Email = user.Email
             };
 
