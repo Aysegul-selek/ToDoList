@@ -56,7 +56,6 @@ namespace ToDo.Web.Controllers
         {
             return View();
         }
-
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto model)
         {
@@ -73,33 +72,39 @@ namespace ToDo.Web.Controllers
                     var jsonResponse = await responseMessage.Content.ReadAsStringAsync();
                     var token = JsonConvert.DeserializeObject<TokenResponse>(jsonResponse);
 
-                    // Token'ı cookie'ye kaydediyoruz
-                    Response.Cookies.Append("AuthToken", token.AccessToken, new Microsoft.AspNetCore.Http.CookieOptions
+                    // Token'ı cookie'ye kaydet
+                    Response.Cookies.Append("AuthToken", token.AccessToken, new CookieOptions
                     {
                         HttpOnly = true,
-                        Secure = true,
-                        SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict
+                        Secure = false,  // Geliştirme ortamında false, gerçek ortamda true
+                        SameSite = SameSiteMode.Lax,
+                        Expires = DateTime.Now.AddHours(1)
                     });
 
-                    // Kullanıcı adı almak için API çağrısı
+                    // Bearer token'ı header'a ekle
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+
+                    // Kullanıcı adını almak için istek yap
                     var userNameResponse = await client.GetAsync("https://localhost:44305/api/Auth/user");
                     if (userNameResponse.IsSuccessStatusCode)
                     {
                         var userInfo = await userNameResponse.Content.ReadAsStringAsync();
                         var user = JsonConvert.DeserializeObject<UserDto>(userInfo);
 
-                        // Kullanıcı adını ViewData'ya ekle
-                        ViewData["UserName"] = user.UserName;  // Burada kullanıcı adı "FullName" olarak alındı.
+                        TempData["UserName"] = user.UserName; // Kullanıcı adını TempData'ya kaydediyoruz
                     }
 
-                    return RedirectToAction("Index", "ToDo");
+                    return RedirectToAction("ToDoList", "ToDo");
                 }
 
-                // Hata durumunda mesaj göster
-                ModelState.AddModelError("", "Giriş işlemi başarısız.");
+                ModelState.AddModelError("", "Giriş başarısız.");
             }
+
             return View(model);
         }
+
+
+
         // Çıkış Yapma
         public IActionResult Logout()
         {

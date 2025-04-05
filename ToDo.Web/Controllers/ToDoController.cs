@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.Text;
+using ToDoAPI.Entities.DTOs;
 using ToDoAPI.Entities.DTOs.ToDo;
 using ToDoAPI.Entities.Enums;
 
@@ -24,6 +26,28 @@ namespace ToDo.Web.Controllers
         public async Task<IActionResult> ToDoList()
         {
             var client = _httpClientFactory.CreateClient();
+
+            // Cookie'den token'ı al
+            var token = Request.Cookies["AuthToken"];
+            if (!string.IsNullOrEmpty(token))
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                // Kullanıcı bilgisini çek
+                var userInfoResponse = await client.GetAsync("https://localhost:44305/api/Auth/user");
+                if (userInfoResponse.IsSuccessStatusCode)
+                {
+                    var userJson = await userInfoResponse.Content.ReadAsStringAsync();
+                    var user = JsonConvert.DeserializeObject<UserDto>(userJson);
+                    ViewBag.UserName = user.UserName; // Kullanıcı adını ViewBag'e kaydediyoruz
+                }
+            }
+            else
+            {
+                ViewBag.UserName = "Misafir";
+            }
+
+            // Todo listesi çekiliyor
             var responseMessage = await client.GetAsync("https://localhost:44305/api/Todo");
 
             if (responseMessage.IsSuccessStatusCode)
@@ -33,7 +57,6 @@ namespace ToDo.Web.Controllers
 
                 foreach (var todo in values)
                 {
-
                     if (Enum.TryParse(typeof(StatusEnum), todo.Status, out var statusEnumValue))
                     {
                         todo.Status = Enum.GetName(typeof(StatusEnum), statusEnumValue);
@@ -42,8 +65,11 @@ namespace ToDo.Web.Controllers
 
                 return View(values);
             }
-            return View();
+
+            return View(new List<TodoDto>());
         }
+
+
         [HttpGet]
         public IActionResult Create()
         {

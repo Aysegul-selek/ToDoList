@@ -34,23 +34,17 @@ namespace TodoAPI.Controllers
         }
 
         [HttpGet("user")]
-        [Authorize] 
+        [Authorize]
         public async Task<IActionResult> GetUserInfo()
         {
-            var userIdString = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var username = User.FindFirst(ClaimTypes.Name)?.Value;
 
-            if (string.IsNullOrEmpty(userIdString))
+            if (string.IsNullOrEmpty(username))
             {
-                return Unauthorized();  // Eğer kimlik doğrulama yapılmamışsa 401 döndürüyoruz
+                return Unauthorized();
             }
 
-            // Try to convert the userId from string to int
-            if (!int.TryParse(userIdString, out int userId))
-            {
-                return Unauthorized(); // If conversion fails, return unauthorized
-            }
-
-            var user = await _userService.GetUserByIdAsync(userId);  // Pass the integer userId
+            var user = await _userService.GetUserByUsernameAsync(username);  // <-- BU methodu userService içinde yazmalısın
 
             if (user == null)
             {
@@ -58,8 +52,8 @@ namespace TodoAPI.Controllers
             }
 
             return Ok(user);
-
         }
+
 
     }
 }

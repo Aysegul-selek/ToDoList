@@ -24,33 +24,21 @@
                             <a class="nav-link active" asp-area="" asp-controller="ToDo" asp-action="Detail">Details</a>
                         </li>
                     </ul>
-                    <ul class="navbar-nav ms-auto" id="account-nav">
-                        <!-- Login ve Register linkleri (kullanıcı giriş yapmadığında gösterilir) -->
-                        @if (ViewData["Username"] == null)
-                        {
+          <ul class="navbar-nav">
+    @if (ViewBag.UserName != null)
+    {
+        <li class="nav-item">
+            <span class="nav-link text-white">Merhaba, @ViewBag.UserName</span>
+        </li>
+    }
+    else
+    {
                             <li class="nav-item" id="login-link">
                                 <a class="nav-link" href="/Account/Login">Login</a>
                             </li>
-                            <li class="nav-item" id="register-link">
-                                <a class="nav-link" href="/Account/Register">Register</a>
-                            </li>
-                        }
-                        <!-- Profil Dropdown (kullanıcı giriş yaptıysa gösterilir) -->
-                        @if (ViewData["Username"] != null)
-                        {
-                            <li class="nav-item dropdown-user" id="profile-link">
-                                <a class="nav-link" href="#" id="user-dropdown-toggle">
-                                    <img src="https://www.gravatar.com/avatar/ce21e05eba5c9e5889d78a37407b11d9?s=200" alt="User Avatar">
-                                    <span class="user-name">@ViewData["Username"]</span>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a href="/Account/Profile" class="dropdown-item">My Profile</a>
-                                    <a href="/Account/Settings" class="dropdown-item">Account Settings</a>
-                                    <a href="/Account/Logout" class="dropdown-item">Logout</a>
-                                </div>
-                            </li>
-                        }
-                    </ul>
+    }
+</ul>
+
                 </div>
             </div>
         </nav>

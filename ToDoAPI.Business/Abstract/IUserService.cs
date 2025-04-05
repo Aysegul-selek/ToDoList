@@ -13,5 +13,7 @@ namespace ToDoAPI.Business.Concrete
         Task<UserDto> GetUserByIdAsync(int id);
         Task<bool> RegisterAsync(RegisterDto registerDto);
         Task<string> LoginAsync(LoginDto loginDto);
+        Task<UserDto> GetUserByUsernameAsync(string username);
+
     }
 }

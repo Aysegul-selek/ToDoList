@@ -46,6 +46,21 @@ namespace ToDoAPI.Business.Abstract
 
         }
 
+        public async Task<UserDto> GetUserByUsernameAsync(string username)
+        {
+            var user = await _userRepository.GetByUsernameAsync(username);
+            if (user == null) return null;
+
+            return new UserDto
+            {
+                UserId = user.UserId,
+                UserName = user.Username,
+                Email = user.Email
+                // diğer gerekli alanlar
+            };
+        }
+
+
         public async Task<string> LoginAsync(LoginDto loginDto)
         {
             var user = await _userRepository.GetByUsernameAsync(loginDto.Username);
