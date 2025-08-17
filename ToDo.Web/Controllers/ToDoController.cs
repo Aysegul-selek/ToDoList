@@ -23,28 +23,37 @@ namespace ToDo.Web.Controllers
             return View();
         }
         [HttpGet]
+     
         public async Task<IActionResult> ToDoList()
         {
             var client = _httpClientFactory.CreateClient();
 
             // Cookie'den token'ı al
             var token = Request.Cookies["AuthToken"];
-            if (!string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(token))
             {
+                // Token yoksa misafir olarak göster
+                ViewBag.UserName = "vvvv";
+            }
+            else
+            {
+                // Token varsa, header'a ekleyip API'den kullanıcı bilgisini çek
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                // Kullanıcı bilgisini çek
                 var userInfoResponse = await client.GetAsync("https://localhost:44305/api/Auth/user");
+
+
                 if (userInfoResponse.IsSuccessStatusCode)
                 {
                     var userJson = await userInfoResponse.Content.ReadAsStringAsync();
                     var user = JsonConvert.DeserializeObject<UserDto>(userJson);
                     ViewBag.UserName = user.UserName; // Kullanıcı adını ViewBag'e kaydediyoruz
                 }
-            }
-            else
-            {
-                ViewBag.UserName = "Misafir";
+                else
+                {
+                    // Token geçerli değilse misafir olarak göster
+                    ViewBag.UserName = "Misafir";
+                }
             }
 
             // Todo listesi çekiliyor
@@ -66,9 +75,9 @@ namespace ToDo.Web.Controllers
                 return View(values);
             }
 
+            // Eğer Todo listesi alınamazsa boş bir liste döneceğiz
             return View(new List<TodoDto>());
         }
-
 
         [HttpGet]
         public IActionResult Create()

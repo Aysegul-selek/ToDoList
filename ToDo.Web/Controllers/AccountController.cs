@@ -62,42 +62,52 @@ namespace ToDo.Web.Controllers
             if (ModelState.IsValid)
             {
                 var client = _httpClientFactory.CreateClient();
+
+                // LoginDto'yu JSON'a dönüştürüp istek gövdesine ekliyoruz
                 var jsonData = JsonConvert.SerializeObject(model);
                 StringContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
+                // Login isteği gönderiyoruz
                 var responseMessage = await client.PostAsync("https://localhost:44305/api/Auth/login", content);
 
                 if (responseMessage.IsSuccessStatusCode)
                 {
+                    // Token'ı string olarak alıyoruz
                     var jsonResponse = await responseMessage.Content.ReadAsStringAsync();
-                    var token = JsonConvert.DeserializeObject<TokenResponse>(jsonResponse);
+                    var token = jsonResponse; // Token string olarak alındı
 
-                    // Token'ı cookie'ye kaydet
-                    Response.Cookies.Append("AuthToken", token.AccessToken, new CookieOptions
+                    // Token'ı çerezde saklıyoruz
+                    Response.Cookies.Append("AuthToken", token, new CookieOptions
                     {
                         HttpOnly = true,
-                        Secure = false,  // Geliştirme ortamında false, gerçek ortamda true
+                        Secure = false,  // Geliştirme ortamında false, gerçek ortamda true olmalı
                         SameSite = SameSiteMode.Lax,
                         Expires = DateTime.Now.AddHours(1)
                     });
 
-                    // Bearer token'ı header'a ekle
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+                    // Bearer token'ı header'a ekliyoruz
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                    // Kullanıcı adını almak için istek yap
+                    // Kullanıcı adını almak için başka bir API çağrısı yapıyoruz
                     var userNameResponse = await client.GetAsync("https://localhost:44305/api/Auth/user");
+
                     if (userNameResponse.IsSuccessStatusCode)
                     {
                         var userInfo = await userNameResponse.Content.ReadAsStringAsync();
                         var user = JsonConvert.DeserializeObject<UserDto>(userInfo);
 
-                        TempData["UserName"] = user.UserName; // Kullanıcı adını TempData'ya kaydediyoruz
+                        // Kullanıcı adını TempData'ya kaydediyoruz
+                        TempData["UserName"] = user.UserName;
                     }
 
+                    // Ana sayfaya yönlendiriyoruz
                     return RedirectToAction("ToDoList", "ToDo");
                 }
-
-                ModelState.AddModelError("", "Giriş başarısız.");
+                else
+                {
+                    // Giriş başarısız olursa hata mesajı ekliyoruz
+                    ModelState.AddModelError("", "Giriş başarısız.");
+                }
             }
 
             return View(model);
