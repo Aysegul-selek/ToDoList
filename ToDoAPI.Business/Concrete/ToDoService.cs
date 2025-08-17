@@ -23,15 +23,12 @@ namespace ToDoAPI.Business.Abstract
             _todoRepository = todoRepository;
         
         }
-
-
         public async Task<TodoDto> CreateTodoAsync(TodoCreateDTO todoCreateDto)
         {
             var todo = _mapper.Map<Todo>(todoCreateDto);
             var createdTodo = await _todoRepository.CreateTodoAsync(todo);
             return _mapper.Map<TodoDto>(createdTodo);
         }
-
         public async Task<bool> DeleteTodoAsync(int todoId)
         {
             return await _todoRepository.DeleteTodoAsync(todoId);
@@ -42,13 +39,11 @@ namespace ToDoAPI.Business.Abstract
             var todos = await _todoRepository.GetAllTodosAsync();
             return _mapper.Map<List<TodoDto>>(todos);
         }
-
         public async Task<TodoDto> GetTodoByIdAsync(int todoId)
         {
             var todo = await _todoRepository.GetTodoByIdAsync(todoId);
             return _mapper.Map<TodoDto>(todo);
         }
-
         public async Task<bool> UpdateStatusAsync(int todoId, string status)
         {
             // StatusEnum'a dönüştürme işlemi
@@ -74,7 +69,6 @@ namespace ToDoAPI.Business.Abstract
             var updatedTodo = await _todoRepository.UpdateTodoAsync(todo);
             return _mapper.Map<TodoDto>(updatedTodo);
         }
-
         public async Task UpdateTodoDescriptionAsync(int id, string description)
         {
             await _todoRepository.UpdateTodoDescriptionAsync(id, description);
