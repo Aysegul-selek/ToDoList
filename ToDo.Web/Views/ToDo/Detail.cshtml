@@ -8,6 +8,7 @@
             <th>Description</th>
             <th>Status</th>
             <th>User</th>
+            <th>Actions</th> <!-- Silme butonu -->
         </tr>
     </thead>
     <tbody>
@@ -18,9 +19,15 @@
                 <td>@todo.Description</td>
                 <td>@todo.Status</td>
                 <td>@todo.UserName</td>
+                <td>
+                    <form asp-action="Delete" asp-controller="Todo" method="post" asp-route-id="@todo.TodoId"
+                          onsubmit="return confirm('Bu görevi silmek istediğine emin misin?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+                    </form>
+                </td>
             </tr>
         }
     </tbody>
 </table>
-<a href="/Todo/TodoList" class="btn btn-primary">Back to List</a>
 
+<a href="/Todo/TodoList" class="btn btn-primary">Back to List</a>

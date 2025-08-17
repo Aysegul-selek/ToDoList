@@ -109,5 +109,23 @@ namespace ToDo.Web.Controllers
             }
             return RedirectToAction("Index");
         }
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var client = _httpClientFactory.CreateClient();
+
+            // API tarafındaki DELETE endpointi
+            var responseMessage = await client.DeleteAsync($"https://localhost:44305/api/Todo/{id}");
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                // Silme başarılı olursa listeye dön
+                return RedirectToAction("ToDoList");
+            }
+
+            // Hata durumunda da listeye dön ama istersen hata mesajı ekleyebilirsin
+            return RedirectToAction("ToDoList");
+        }
+
     }
 }
