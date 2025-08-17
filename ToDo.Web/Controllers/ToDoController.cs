@@ -127,5 +127,41 @@ namespace ToDo.Web.Controllers
             return RedirectToAction("ToDoList");
         }
 
+        [HttpPut]
+        public async Task<IActionResult> Update(int id, [FromBody] TodoCreateDTO model)
+        {
+            var client = _httpClientFactory.CreateClient();
+            var json = JsonConvert.SerializeObject(model);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var resp = await client.PutAsync($"https://localhost:44305/api/Todo/{id}", content);
+            if (resp.IsSuccessStatusCode) return Ok();
+            return BadRequest("Güncelleme başarısız!");
+        }
+
+
+        // SADECE STATUS → PUT /api/Todo/{id}/status?status=...
+        [HttpPost]
+        public async Task<IActionResult> UpdateStatus(int id, string status)
+        {
+            var client = _httpClientFactory.CreateClient();
+            var resp = await client.PutAsync($"https://localhost:44305/api/Todo/{id}/status?status={Uri.EscapeDataString(status)}", null);
+            if (resp.IsSuccessStatusCode) return Ok();
+            return BadRequest();
+        }
+
+        // SADECE DESCRIPTION → PUT /api/Todo/{id}/description  (body: string)
+        [HttpPost]
+        public async Task<IActionResult> UpdateDescription(int id, [FromBody] string description)
+        {
+            var client = _httpClientFactory.CreateClient();
+            // API [FromBody] string beklediği için JSON string literal gönderiyoruz: "metin"
+            var content = new StringContent(JsonConvert.SerializeObject(description), Encoding.UTF8, "application/json");
+
+            var resp = await client.PutAsync($"https://localhost:44305/api/Todo/{id}/description", content);
+            if (resp.IsSuccessStatusCode) return Ok();
+            return BadRequest();
+        }
+
     }
 }
