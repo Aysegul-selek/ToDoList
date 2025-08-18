@@ -127,7 +127,7 @@ namespace ToDo.Web.Controllers
             return RedirectToAction("ToDoList");
         }
 
-        [HttpPut]
+        [HttpPut("Update/{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] TodoCreateDTO model)
         {
             var client = _httpClientFactory.CreateClient();
@@ -140,7 +140,7 @@ namespace ToDo.Web.Controllers
         }
 
 
-        // SADECE STATUS → PUT /api/Todo/{id}/status?status=...
+
         [HttpPost]
         public async Task<IActionResult> UpdateStatus(int id, string status)
         {

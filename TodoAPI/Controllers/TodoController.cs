@@ -44,6 +44,7 @@ public class TodoController : ControllerBase
         var createdTodo = await _todoService.CreateTodoAsync(todoCreateDto);
         return CreatedAtAction(nameof(GetTodoById), new { id = createdTodo.TodoId }, createdTodo);
     }
+   
     [HttpPut("{id}")]
     public async Task<ActionResult<TodoDto>> UpdateTodo(int id, [FromBody] TodoCreateDTO todoCreateDto)
     {
@@ -55,6 +56,7 @@ public class TodoController : ControllerBase
             return NotFound("Todo not found.");
         return Ok(updatedTodo);
     }
+    
     [HttpPut("{todoId}/status")]
     public async Task<IActionResult> UpdateStatus(int todoId, string status)
     {

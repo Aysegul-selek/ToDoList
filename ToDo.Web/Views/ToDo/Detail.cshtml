@@ -20,19 +20,16 @@
                 <td>@todo.Status</td>
                 <td>@todo.UserName</td>
                 <td>
-                    <!-- Update Button -->
                     <button class="btn btn-warning btn-sm me-1 edit-btn"
                             data-id="@todo.TodoId"
                             data-title="@todo.Title"
                             data-description="@todo.Description"
-                            data-status="@todo.Status"
-                            data-user="@todo.UserName"
+                            data-status="@((int)Enum.Parse(typeof(ToDoAPI.Entities.Enums.StatusEnum), todo.Status))"
                             data-bs-toggle="modal"
                             data-bs-target="#editModal">
                         ✏️ Update
                     </button>
 
-                    <!-- Delete Button -->
                     <form asp-action="Delete" asp-controller="ToDo" method="post" asp-route-id="@todo.TodoId"
                           style="display:inline;"
                           onsubmit="return confirm('Bu görevi silmek istediğine emin misin?');">
@@ -55,23 +52,28 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="todoId" />
+
                     <div class="mb-3">
                         <label class="form-label">Title</label>
                         <input class="form-control" id="title" />
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label">Description</label>
                         <textarea class="form-control" id="description"></textarea>
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label">Status</label>
-                        <input class="form-control" id="status" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">User</label>
-                        <input class="form-control" id="user" />
+                        <select class="form-control" id="status">
+                            @foreach (var s in Enum.GetValues(typeof(ToDoAPI.Entities.Enums.StatusEnum)))
+                            {
+                                <option value="@( (int)s )">@s.ToString()</option>
+                            }
+                        </select>
                     </div>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Save</button>
@@ -92,7 +94,6 @@
                     document.getElementById('title').value = btn.dataset.title;
                     document.getElementById('description').value = btn.dataset.description;
                     document.getElementById('status').value = btn.dataset.status;
-                    document.getElementById('user').value = btn.dataset.user;
                 });
             });
 
@@ -100,24 +101,27 @@
             document.getElementById('editForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const id = document.getElementById('todoId').value;
+
                 const payload = {
                     Title: document.getElementById('title').value,
                     Description: document.getElementById('description').value,
-                    Status: document.getElementById('status').value,
-                    UserName: document.getElementById('user').value
+                    Status: parseInt(document.getElementById('status').value)
                 };
 
                 const res = await fetch(`/ToDo/Update/${id}`, {
-                    method: 'PUT', // POST yerine PUT
+                    method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
 
-                if(res.ok) location.reload();
-                else alert('Update failed!');
+                if(res.ok) {
+                    location.reload();
+                } else {
+                    const errText = await res.text();
+                    alert('Update failed!\n' + errText);
+                }
             });
 
         });
     </script>
-
 }

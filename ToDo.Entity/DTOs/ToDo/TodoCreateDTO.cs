@@ -11,8 +11,8 @@ namespace ToDoAPI.Entities.DTOs.ToDo
     {
         public string Title { get; set; }
         public string Description { get; set; }
-        public int UserId { get; set; }
         public string UserName { get; set; }
+        public int UserId { get; set; }
         public StatusEnum Status { get; set; }
     }
 }
