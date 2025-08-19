@@ -20,19 +20,20 @@
                 <td>@todo.Status</td>
                 <td>@todo.UserName</td>
                 <td>
-                    <button class="btn btn-warning btn-sm me-1 edit-btn"
+                    <button class="btn btn-warning btn-sm edit-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editModal"
                             data-id="@todo.TodoId"
                             data-title="@todo.Title"
                             data-description="@todo.Description"
                             data-status="@((int)Enum.Parse(typeof(ToDoAPI.Entities.Enums.StatusEnum), todo.Status))"
-                            data-bs-toggle="modal"
-                            data-bs-target="#editModal">
+                            data-userid="@todo.UserId"
+                            data-username="@todo.UserName">
                         ✏️ Update
                     </button>
 
                     <form asp-action="Delete" asp-controller="ToDo" method="post" asp-route-id="@todo.TodoId"
-                          style="display:inline;"
-                          onsubmit="return confirm('Bu görevi silmek istediğine emin misin?');">
+                          style="display:inline;" onsubmit="return confirm('Bu görevi silmek istediğine emin misin?');">
                         <button type="submit" class="btn btn-danger btn-sm">🗑 Delete</button>
                     </form>
                 </td>
@@ -68,12 +69,23 @@
                         <select class="form-control" id="status">
                             @foreach (var s in Enum.GetValues(typeof(ToDoAPI.Entities.Enums.StatusEnum)))
                             {
-                                <option value="@( (int)s )">@s.ToString()</option>
+                                <option value="@((int)s)">@s.ToString()</option>
                             }
                         </select>
                     </div>
-                </div>
 
+                    <!-- USER FIELDS VISIBLE -->
+                    <div class="mb-3">
+                        <label class="form-label">User ID</label>
+                        <input type="number" class="form-control" id="userId" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">User Name</label>
+                        <input type="text" class="form-control" id="userName" />
+                    </div>
+
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Save</button>
@@ -86,18 +98,17 @@
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-
-            // Modal açılırken değerleri doldur
             document.querySelectorAll('.edit-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.getElementById('todoId').value = btn.dataset.id;
                     document.getElementById('title').value = btn.dataset.title;
                     document.getElementById('description').value = btn.dataset.description;
                     document.getElementById('status').value = btn.dataset.status;
+                    document.getElementById('userId').value = btn.dataset.userid;
+                    document.getElementById('userName').value = btn.dataset.username;
                 });
             });
 
-            // Submit -> PUT /ToDo/Update/{id}
             document.getElementById('editForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const id = document.getElementById('todoId').value;
@@ -105,23 +116,32 @@
                 const payload = {
                     Title: document.getElementById('title').value,
                     Description: document.getElementById('description').value,
-                    Status: parseInt(document.getElementById('status').value)
+                    Status: parseInt(document.getElementById('status').value),
+                    UserId: parseInt(document.getElementById('userId').value),
+                    UserName: document.getElementById('userName').value
                 };
 
-                const res = await fetch(`/ToDo/Update/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+                try {
+                           const apiBase = "https://localhost:44305/api/Todo"; 
+        const res = await fetch(`${apiBase}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
 
-                if(res.ok) {
+                    if (!res.ok) {
+                        const errText = await res.text();
+                        alert('Update failed!\n' + errText);
+                        return;
+                    }
+
+                    alert('Updated successfully!');
                     location.reload();
-                } else {
-                    const errText = await res.text();
-                    alert('Update failed!\n' + errText);
+                } catch (err) {
+                    console.error('Fetch error:', err);
+                    alert('Update failed due to network or server error.');
                 }
             });
-
         });
     </script>
 }
