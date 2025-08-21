@@ -28,16 +28,15 @@ namespace ToDo.Web.Controllers
         {
             var client = _httpClientFactory.CreateClient();
 
-            // Cookie'den token'ı al
+          
             var token = Request.Cookies["AuthToken"];
             if (string.IsNullOrEmpty(token))
             {
-                // Token yoksa misafir olarak göster
+               
                 ViewBag.UserName = "vvvv";
             }
             else
             {
-                // Token varsa, header'a ekleyip API'den kullanıcı bilgisini çek
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 var userInfoResponse = await client.GetAsync("https://localhost:44305/api/Auth/user");
@@ -47,11 +46,11 @@ namespace ToDo.Web.Controllers
                 {
                     var userJson = await userInfoResponse.Content.ReadAsStringAsync();
                     var user = JsonConvert.DeserializeObject<UserDto>(userJson);
-                    ViewBag.UserName = user.UserName; // Kullanıcı adını ViewBag'e kaydediyoruz
+                    ViewBag.UserName = user.UserName; 
                 }
                 else
                 {
-                    // Token geçerli değilse misafir olarak göster
+                 
                     ViewBag.UserName = "Misafir";
                 }
             }
@@ -114,16 +113,16 @@ namespace ToDo.Web.Controllers
         {
             var client = _httpClientFactory.CreateClient();
 
-            // API tarafındaki DELETE endpointi
+           
             var responseMessage = await client.DeleteAsync($"https://localhost:44305/api/Todo/{id}");
 
             if (responseMessage.IsSuccessStatusCode)
             {
-                // Silme başarılı olursa listeye dön
+              
                 return RedirectToAction("ToDoList");
             }
 
-            // Hata durumunda da listeye dön ama istersen hata mesajı ekleyebilirsin
+           
             return RedirectToAction("ToDoList");
         }
 
@@ -139,8 +138,6 @@ namespace ToDo.Web.Controllers
             return BadRequest("Güncelleme başarısız!");
         }
 
-
-
         [HttpPost]
         public async Task<IActionResult> UpdateStatus(int id, string status)
         {
@@ -150,12 +147,12 @@ namespace ToDo.Web.Controllers
             return BadRequest();
         }
 
-        // SADECE DESCRIPTION → PUT /api/Todo/{id}/description  (body: string)
+        
         [HttpPost]
         public async Task<IActionResult> UpdateDescription(int id, [FromBody] string description)
         {
             var client = _httpClientFactory.CreateClient();
-            // API [FromBody] string beklediği için JSON string literal gönderiyoruz: "metin"
+            
             var content = new StringContent(JsonConvert.SerializeObject(description), Encoding.UTF8, "application/json");
 
             var resp = await client.PutAsync($"https://localhost:44305/api/Todo/{id}/description", content);
