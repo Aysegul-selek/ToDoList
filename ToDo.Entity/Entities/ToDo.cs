@@ -18,8 +18,8 @@ namespace ToDoAPI.Entities.Entities
         public bool IsCompleted { get; set; }
         public int UserId { get; set; } 
         public User User { get; set; }      
-        public StatusEnum Status { get; set; } 
-       
+        public StatusEnum Status { get; set; }
+        public DateTime CreatedAtNew { get; set; }
     }
 
 }

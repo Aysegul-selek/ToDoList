@@ -12,57 +12,62 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         .btn-warning {
-            background-color: #FFA500; 
-            border-color: #FFA500; 
-            color: white; 
+            background-color: #FFA500;
+            border-color: #FFA500;
+            color: white;
         }
 
             .btn-warning:hover {
-                background-color: #FF8C00; 
-                border-color: #FF8C00; 
+                background-color: #FF8C00;
+                border-color: #FF8C00;
             }
 
         .modal-content {
-            border-radius: 10px; 
+            border-radius: 10px;
         }
 
         .modal-header {
-            background-color: #8B4513; 
-            color: black; 
-            border-top-left-radius: 10px; 
-            border-top-right-radius: 10px; 
+            background-color: #8B4513;
+            color: black;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
             display: flex;
-            justify-content: space-between; 
-            align-items: center; 
+            justify-content: space-between;
+            align-items: center;
         }
 
         .modal-footer button {
-            font-weight: bold; 
-            text-transform: uppercase; 
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
         .form-control {
-            border-radius: 8px; 
-            background-color: #f1f1f1; 
-            border: 1px solid #ccc; 
+            border-radius: 8px;
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
         }
 
             .form-control:focus {
                 border-color: #FFA500;
-                box-shadow: 0 0 5px rgba(255, 165, 0, 0.5); 
+                box-shadow: 0 0 5px rgba(255, 165, 0, 0.5);
             }
+
         body {
-    overflow-x: hidden;
-}
+            overflow-x: hidden;
+        }
 
         .footer {
             padding-top: 235px;
         }
-    media (max-width: 768px) {
-    .tasks {
-        flex: 1 1 100%; 
-    }
-}
+
+        media (max-width: 768px) {
+            .tasks
+
+        {
+            flex: 1 1 100%;
+        }
+
+        }
 
         .page-title-box .page-title {
             font-size: 18px;
@@ -79,7 +84,7 @@
         .board {
             display: contents;
             gap: 1rem;
-            justify-content: center; 
+            justify-content: center;
         }
 
         a {
@@ -127,8 +132,6 @@
             margin-top: 1rem;
             border: 1px solid #eee;
             border-left-width: 0.25rem;
-            white-space: normal;
-            margin-top: 1rem;
         }
 
         .card {
@@ -172,7 +175,6 @@
     </style>
 </head>
 <body>
-  
     <br />
     <div class="wrapper">
         <div class="content">
@@ -184,7 +186,6 @@
                             <div class="tasks" data-status="ToDo">
                                 <h5 class="mt-0 task-header" id="todo-header">
                                     TODO (@Model.Count(t => t.Status == "ToDo"))
-                                    <!-- + Ekle Butonu -->
                                     <a href="/Todo/Create" class="btn btn-success btn-sm" style="float: right; margin-top: -5px;">+</a>
                                 </h5>
                                 <div id="task-list-one" class="task-list-items">
@@ -205,17 +206,20 @@
                                                         <b>@todo.Description</b>
                                                     </span>
                                                 </p>
+                                                <!-- Oluşturulma tarihi -->
+                                                <p class="text-end text-muted" style="font-size:0.8rem;">
+                                                    @todo.CreatedAtNew.ToString("dd/MM/yyyy HH:mm")
+                                                </p>
                                             </div>
                                         </div>
                                     }
                                 </div>
                             </div>
 
-                            <!-- IN PROGRESS Column -->
+                            <!-- PLANNING Column -->
                             <div class="tasks" data-status="Planning">
                                 <h5 class="mt-0 task-header" id="progress-header">
                                     Planning (0)
-                                    <!-- + Ekle Butonu -->
                                     <a href="/Todo/Create" class="btn btn-success btn-sm" style="float: right; margin-top: -5px;">+</a>
                                 </h5>
                                 <div id="task-list-two" class="task-list-items">
@@ -236,6 +240,9 @@
                                                         <b>@todo.Description</b>
                                                     </span>
                                                 </p>
+                                                <p class="text-end text-muted" style="font-size:0.8rem;">
+                                                    @todo.CreatedAtNew.ToString("dd/MM/yyyy HH:mm")
+                                                </p>
                                             </div>
                                         </div>
                                     }
@@ -246,7 +253,6 @@
                             <div class="tasks" data-status="InProgress">
                                 <h5 class="mt-0 task-header" id="inprogress-header">
                                     InProgress (0)
-                                    <!-- + Ekle Butonu -->
                                     <a href="/Todo/Create" class="btn btn-success btn-sm" style="float: right; margin-top: -5px;">+</a>
                                 </h5>
                                 <div id="task-list-three" class="task-list-items">
@@ -267,6 +273,9 @@
                                                         <b>@todo.Description</b>
                                                     </span>
                                                 </p>
+                                                <p class="text-end text-muted" style="font-size:0.8rem;">
+                                                    @todo.CreatedAtNew.ToString("dd/MM/yyyy HH:mm")
+                                                </p>
                                             </div>
                                         </div>
                                     }
@@ -277,7 +286,6 @@
                             <div class="tasks" data-status="Done">
                                 <h5 class="mt-0 task-header" id="done-header">
                                     Done
-                                    <!-- + Ekle Butonu -->
                                     <a href="/Todo/Create" class="btn btn-success btn-sm" style="float: right; margin-top: -5px;">+</a>
                                 </h5>
                                 <div id="task-list-four" class="task-list-items">
@@ -298,6 +306,9 @@
                                                         <b>@todo.Description</b>
                                                     </span>
                                                 </p>
+                                                <p class="text-end text-muted" style="font-size:0.8rem;">
+                                                    @todo.CreatedAtNew.ToString("dd/MM/yyyy HH:mm")
+                                                </p>
                                             </div>
                                         </div>
                                     }
@@ -308,37 +319,8 @@
                 </div>
             </div>
         </div>
-
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color: #8B4513; color: white;">
-                    <h5 class="modal-title" id="commentModalLabel">Yorum Ekle</h5>
-                    <!-- X butonunu sağa yerleştirdik ve rengini değiştirdik -->
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white; font-size: 1.5rem; background: none; border: none;">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="commentForm">
-                        <input type="hidden" id="todoId" name="todoId">
-                        <div class="form-group">
-                            <label for="comment">Yorum</label>
-                            <textarea class="form-control" id="comment" name="comment" rows="4" placeholder="Yorumunuzu buraya yazın..."></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-warning" id="saveCommentBtn">Yorumu Kaydet</button>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <footer class="footer">
-    </footer>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             let draggingCard = null;
@@ -444,10 +426,10 @@
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify(comment)  
+                body: JSON.stringify(comment)
             })
             .then(response => {
-             
+
                 if (!response.ok) {
                     return response.text().then(text => { throw new Error(text) });
                 }
@@ -457,7 +439,7 @@
                     alert('Yorum başarıyla kaydedildi!');
                     $('#commentModal').modal('hide');
                      window.location.reload();
-                    return; 
+                    return;
                 }
                 return response.json();
             })
@@ -476,5 +458,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+    ...
 </body>
 </html>

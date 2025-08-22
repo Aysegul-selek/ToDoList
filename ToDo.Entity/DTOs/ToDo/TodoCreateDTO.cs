@@ -14,5 +14,6 @@ namespace ToDoAPI.Entities.DTOs.ToDo
         public string UserName { get; set; }
         public int UserId { get; set; }
         public StatusEnum Status { get; set; }
+        public DateTime CreatedAtNew { get; set; }
     }
 }
