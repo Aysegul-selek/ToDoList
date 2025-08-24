@@ -83,25 +83,28 @@ namespace ToDo.Web.Controllers
         {
             return View(); 
         }
+
         [HttpPost]
         public async Task<IActionResult> Create(TodoCreateDTO model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
-            // Oluşturulma tarihini ekle
+         
             model.CreatedAtNew = DateTime.UtcNow;
 
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(model);
-            StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+            var stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
             var responseMessage = await client.PostAsync("https://localhost:44305/api/Todo", stringContent);
 
             if (responseMessage.IsSuccessStatusCode)
-                return RedirectToAction("ToDoList");
+                return RedirectToAction("ToDoList"); 
 
-            return View(model);
+            return View(model); 
         }
+
 
         public async Task<IActionResult> Detail(int id)
         {
