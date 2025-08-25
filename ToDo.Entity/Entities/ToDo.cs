@@ -20,6 +20,7 @@ namespace ToDoAPI.Entities.Entities
         public User User { get; set; }      
         public StatusEnum Status { get; set; }
         public DateTime CreatedAtNew { get; set; }
+        public DateTime? DueDate { get; set; }
     }
 
 }
