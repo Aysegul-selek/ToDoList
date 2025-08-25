@@ -4,20 +4,37 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ToDo</title>
-    <!-- Bootstrap CSS -->
+
+    <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Bootstrap JS (Popper dahil) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* Navbar dropdown yazıları okunaklı */
+        #user-dropdown .dropdown-menu {
+            background-color: #fff;
+        }
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link href="~/css/todolist.css" rel="stylesheet" />
+        #user-dropdown .dropdown-item {
+            color: #333;
+        }
+
+            #user-dropdown .dropdown-item:hover {
+                background-color: #f0f0f0;
+                color: #000;
+            }
+
+        /* Navbar üzerindeki dropdown toggle yazısı ve avatar */
+        .nav-item.dropdown .dropdown-toggle {
+            color: #fff !important;
+        }
+    </style>
 </head>
 <body>
     @RenderSection("Scripts", required: false)
+
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light">
+        <nav class="navbar navbar-expand-lg" style="background-color:#13653f">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="ToDo" asp-action="TodoList">
                     <i class="bi bi-kanban"></i> ToDoList
@@ -32,8 +49,20 @@
                             <a class="nav-link active" asp-area="" asp-controller="ToDo" asp-action="Detail">Details</a>
                         </li>
                     </ul>
+
                     <ul class="navbar-nav">
-                        <li class="nav-item" id="username-display"></li>
+                        <li class="nav-item dropdown" id="user-dropdown" style="display:none;">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                                     class="rounded-circle me-2" style="width:32px; height:32px;" alt="Avatar">
+                                <span id="username-display"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="/Account/Profile">Profilim</a></li>
+                                <li><a class="dropdown-item" href="#" id="logout-link">Çıkış Yap</a></li>
+                            </ul>
+                        </li>
+
                         <li class="nav-item" id="login-link">
                             <a class="nav-link" href="/Account/Login">Login</a>
                         </li>
@@ -42,26 +71,42 @@
             </div>
         </nav>
 
-        <!-- Tarih ve Saat Barı -->
         <div class="bg-light text-end py-1 px-3" style="font-size:0.9rem; font-weight:500; color:#555;">
             @DateTime.Now.ToString("dd MMMM yyyy, HH:mm")
         </div>
     </header>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const username = localStorage.getItem("username");
-        const userElement = document.getElementById("username-display");
-        const loginLink = document.getElementById("login-link");
+        (function(){
+            var username = localStorage.getItem("username");
+            var userDropdown = document.getElementById("user-dropdown");
+            var usernameDisplay = document.getElementById("username-display");
+            var loginLink = document.getElementById("login-link");
+            var logoutLink = document.getElementById("logout-link");
 
-        if(username && userElement) {
-            userElement.innerHTML = `<span class="nav-link text-white">Merhaba, ${username}</span>`;
-            if(loginLink) loginLink.style.display = "none";
-        }
+            if(username && userDropdown && usernameDisplay){
+                usernameDisplay.innerText = username;
+                userDropdown.style.display = "block";
+                if(loginLink) loginLink.style.display = "none";
+            } else {
+                if(loginLink) loginLink.style.display = "block";
+                if(userDropdown) userDropdown.style.display = "none";
+            }
+
+            if(logoutLink){
+                logoutLink.addEventListener("click", function(e){
+                    e.preventDefault();
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("username");
+                    if(userDropdown) userDropdown.style.display = "none";
+                    if(loginLink) loginLink.style.display = "block";
+                    window.location.href = "/Account/Login";
+                });
+            }
+        })();
     </script>
 
-
-    <!-- RenderBody: Page content rendered here -->
     @RenderBody()
-
 </body>
 </html>
