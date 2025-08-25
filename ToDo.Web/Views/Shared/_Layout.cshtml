@@ -22,9 +22,10 @@
                 <a class="navbar-brand" asp-area="" asp-controller="ToDo" asp-action="TodoList">
                     <i class="bi bi-kanban"></i> ToDoList
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
@@ -32,18 +33,10 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav">
-                        @if (ViewBag.UserName != null)
-                        {
-                            <li class="nav-item">
-                                <span class="nav-link text-white">Merhaba, @ViewBag.UserName</span>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item" id="login-link">
-                                <a class="nav-link" href="/Account/Login">Login</a>
-                            </li>
-                        }
+                        <li class="nav-item" id="username-display"></li>
+                        <li class="nav-item" id="login-link">
+                            <a class="nav-link" href="/Account/Login">Login</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -54,6 +47,17 @@
             @DateTime.Now.ToString("dd MMMM yyyy, HH:mm")
         </div>
     </header>
+
+    <script>
+        const username = localStorage.getItem("username");
+        const userElement = document.getElementById("username-display");
+        const loginLink = document.getElementById("login-link");
+
+        if(username && userElement) {
+            userElement.innerHTML = `<span class="nav-link text-white">Merhaba, ${username}</span>`;
+            if(loginLink) loginLink.style.display = "none";
+        }
+    </script>
 
 
     <!-- RenderBody: Page content rendered here -->

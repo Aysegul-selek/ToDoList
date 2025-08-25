@@ -44,7 +44,7 @@ namespace TodoAPI.Controllers
                 return Unauthorized();
             }
 
-            var user = await _userService.GetUserByUsernameAsync(username);  // <-- BU methodu userService içinde yazmalısın
+            var user = await _userService.GetUserByUsernameAsync(username);  
 
             if (user == null)
             {
